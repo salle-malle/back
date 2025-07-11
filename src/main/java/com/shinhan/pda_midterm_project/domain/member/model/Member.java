@@ -1,11 +1,15 @@
 package com.shinhan.pda_midterm_project.domain.member.model;
 
 import com.shinhan.pda_midterm_project.common.util.BaseEntity;
+import com.shinhan.pda_midterm_project.domain.investment_type.model.InvestmentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,29 +27,52 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "investment_type_id")
+    private InvestmentType investmentType;
+
+    @Column(nullable = false, length = 255)
     private String memberId;
 
-    @Column(length = 30)
-    private String phoneNumber;
+    @Column(columnDefinition = "TEXT")
+    private String memberPassword;
 
-    @Column(length = 15)
-    private String nickname;
+    @Column(length = 255)
+    private String memberNickname;
 
-    @Column(length = 5)
-    private String name;
+    @Column(length = 20)
+    private String memberPhone;
 
-    public void updateProfile(String name, String nickname, String phoneNumber) {
-        this.name = name;
-        this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
+    @Column(columnDefinition = "TEXT")
+    private String memberProfileImg;
+
+    @Column(columnDefinition = "TEXT")
+    private String memberAppKey;
+
+    @Column(columnDefinition = "TEXT")
+    private String memberAppSecret;
+
+    @Column(length = 255)
+    private String memberAccountNumber;
+
+    @Column
+    private java.time.LocalDate memberCreatedAt;
+
+    @Column
+    private Boolean memberIsRead;
+
+    public void updateProfile(String memberNickname, String memberPhone) {
+        this.memberNickname = memberNickname;
+        this.memberPhone = memberPhone;
     }
 
     // TODO: 나중에 erd 확정 후 추가 : 기본적인 예시용
-    public static Member create(String memberId, String phoneNumber) {
+    public static Member create(String memberId, String memberPassword, String memberNickname, String memberPhone) {
         return Member.builder()
                 .memberId(memberId)
-                .phoneNumber(phoneNumber)
+                .memberPassword(memberPassword)
+                .memberNickname(memberNickname)
+                .memberPhone(memberPhone)
                 .build();
     }
 }
