@@ -1,0 +1,32 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 43.200.100.172 >> ~/.ssh/known_hosts
+
+      - name: Build JAR
+        run: ./gradlew clean build
+
+      - name: Copy JAR to EC2
+        run: |
+          scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no build/libs/pda-midterm-project-0.0.1-SNAPSHOT.jar ubuntu@43.200.100.172:/home/ubuntu/pda-app/
+
+      - name: Deploy on EC2
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ubuntu@43.200.100.172 "cd /home/ubuntu/pda-app && ./deploy.sh"
