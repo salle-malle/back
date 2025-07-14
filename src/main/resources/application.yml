@@ -30,7 +30,9 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
-
+  profiles:
+    include:
+      - jwt
 logging:
   level:
     org.hibernate.SQL: DEBUG
