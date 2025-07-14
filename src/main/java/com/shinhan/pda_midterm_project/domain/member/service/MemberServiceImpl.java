@@ -13,22 +13,32 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-  private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-  @Override
-  public Member findById(Long memberId) {
-    return memberRepository.findById(memberId)
-        .orElseThrow(() -> new MemberException(ResponseMessages.MEMBER_NOT_FOUND));
-  }
+    @Override
+    public Member findById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new MemberException(ResponseMessages.MEMBER_NOT_FOUND));
+    }
 
-  @Override
-  @Transactional
-  public void updatePhoneNumber(Long memberId, String phoneNumber) {
-    Member member = findById(memberId);
+    @Override
+    @Transactional
+    public void updatePhoneNumber(Long memberId, String phoneNumber) {
+        Member member = findById(memberId);
 
-    member.updateProfile(
-        member.getMemberNickname(),
-        phoneNumber);
-  }
+        member.updateProfile(
+                member.getMemberNickname(),
+                phoneNumber);
+    }
 
+    @Override
+    public Member findByMemberId(String memberId) {
+        return memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new MemberException(ResponseMessages.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    public void saveMember(Member member) {
+        memberRepository.save(member);
+    }
 }

@@ -30,7 +30,10 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
-
+  profiles:
+    include:
+      - jwt
+      - coolSMS
 logging:
   level:
     org.hibernate.SQL: DEBUG

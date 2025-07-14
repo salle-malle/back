@@ -1,0 +1,4 @@
+jwt:
+  access-expire-ms: 3600000
+  secret: "this-is-a-secure-key-with-at-least-32-characters!!"
+  issuer: "testIssuer"
