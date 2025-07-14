@@ -51,8 +51,8 @@ public class AuthController {
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, userTokens.accessToken().toString())
                 .body(Response.success(
-                        ResponseMessages.LOGIN_SUCCESS.getCode(),
-                        ResponseMessages.LOGIN_SUCCESS.getMessage()
+                        ResponseMessages.SIGNUP_SUCCESS.getCode(),
+                        ResponseMessages.SIGNUP_SUCCESS.getMessage()
                 ));
     }
 }
