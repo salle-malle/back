@@ -44,7 +44,6 @@ public class NotificationService {
         if (emitter != null) {
             try {
                 emitter.send(SseEmitter.event()
-                        .name("notification")
                         .data(data));
                 log.info(">>> [알림 전송 완료]");
             } catch (Exception e) {
