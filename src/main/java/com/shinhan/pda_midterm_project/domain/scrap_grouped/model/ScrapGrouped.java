@@ -1,7 +1,7 @@
 package com.shinhan.pda_midterm_project.domain.scrap_grouped.model;
 
 import com.shinhan.pda_midterm_project.common.util.BaseEntity;
-import com.shinhan.pda_midterm_project.domain.user_scrap.model.UserScrap;
+import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.model.MemberStockSnapshot;
 import com.shinhan.pda_midterm_project.domain.scrap_group.model.ScrapGroup;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,8 +17,8 @@ public class ScrapGrouped extends BaseEntity {
   private Long scrapGroupedId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "scrap_id")
-  private UserScrap userScrap;
+  @JoinColumn(name = "member_stock_snapshot_id")
+  private MemberStockSnapshot memberStockSnapshot;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "scrap_group_id")
