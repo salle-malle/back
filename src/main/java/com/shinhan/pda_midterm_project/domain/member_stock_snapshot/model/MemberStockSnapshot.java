@@ -1,8 +1,8 @@
-package com.shinhan.pda_midterm_project.domain.user_scrap.model;
+package com.shinhan.pda_midterm_project.domain.member_stock_snapshot.model;
 
 import com.shinhan.pda_midterm_project.common.util.BaseEntity;
+import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.model.InvestmentTypeNewsComment;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
-import com.shinhan.pda_midterm_project.domain.summary.model.Summary;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class UserScrap extends BaseEntity {
+public class MemberStockSnapshot extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -21,6 +21,9 @@ public class UserScrap extends BaseEntity {
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "summary_id")
-  private Summary summary;
+  @JoinColumn(name = "investment_type_news_comment_id")
+  private InvestmentTypeNewsComment investmentTypeNewsComment;
+
+  @JoinColumn(name = "user_scrap")
+  private Boolean userScrap;
 }

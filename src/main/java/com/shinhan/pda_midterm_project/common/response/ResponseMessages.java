@@ -24,7 +24,14 @@ public enum ResponseMessages {
     INVALID_CERTIFICATION_NUMBER("AUTH-006", "인증번호가 올바르지 않습니다."),
     CERTIFICATION_BAD_REQUEST("AUTH-007", "인증 번호 요청을 다시 수행하세요"),
     CERTIFICATION_REQUEST_SUCCESS("AUTH-008", "인증번호 요청을 성공했습니다."),
-    CERTIFICATION_VERIFY_SUCCESS("AUTH-009", "인증번호 검증을 성공했습니다.");
+    CERTIFICATION_VERIFY_SUCCESS("AUTH-009", "인증번호 검증을 성공했습니다."),
+
+    /**
+     * scrap
+     */
+    GET_SCRAP_GROUP_SUCCESS("GROUP-001", "유저 스크랩 그룹 가져오기 성공"),
+    GET_SCRAP_GROUPED_SUCCESS("GROUPED-001", "유저 스크랩 그룹의 스크랩들 가져오기 성공"),
+    POST_SCRAP_GROUPED_SUCCESS("GROUP-001", "유저 스크랩 그룹 추가 성공");
 
     // 도메인 추가해주세요
     private final String code;
