@@ -1,4 +1,4 @@
-package com.shinhan.pda_midterm_project.presentation.member;
+package com.shinhan.pda_midterm_project.presentation.auth.controller;
 
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
@@ -32,6 +32,24 @@ public class AuthController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, loginResult.accessToken().toString())
+                .body(Response.success(
+                        ResponseMessages.LOGIN_SUCCESS.getCode(),
+                        ResponseMessages.LOGIN_SUCCESS.getMessage()
+                ));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<Response<Object>> signUp(
+            @Valid @RequestBody AuthRequest.SignUp signUpRequest
+    ) {
+        String id = signUpRequest.id();
+        String password = signUpRequest.password();
+        String phoneNumber = signUpRequest.phoneNumber();
+        UserTokens userTokens = authService.signUp(id, password, phoneNumber);
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, userTokens.accessToken().toString())
                 .body(Response.success(
                         ResponseMessages.LOGIN_SUCCESS.getCode(),
                         ResponseMessages.LOGIN_SUCCESS.getMessage()

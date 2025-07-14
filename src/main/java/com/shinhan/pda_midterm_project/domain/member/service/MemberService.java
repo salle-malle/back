@@ -8,4 +8,6 @@ public interface MemberService {
     void updatePhoneNumber(Long memberId, String phoneNumber);
 
     Member findByMemberId(String memberId);
+
+    void saveMember(Member member);
 }

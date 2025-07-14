@@ -30,4 +30,14 @@ public class AuthServiceImpl implements AuthService {
 
         return tokenProvider.generateTokens(member.getId().toString());
     }
+
+    @Override
+    public UserTokens signUp(String id, String password, String phoneNumber) {
+        String hashedPw = BCrypt.hashpw(password, BCrypt.gensalt());
+        Member member = Member.create(id, hashedPw, phoneNumber);
+
+        memberService.saveMember(member);
+
+        return tokenProvider.generateTokens(member.getId().toString());
+    }
 }

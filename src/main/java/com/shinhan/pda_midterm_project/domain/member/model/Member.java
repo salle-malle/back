@@ -67,11 +67,11 @@ public class Member extends BaseEntity {
     }
 
     // TODO: 나중에 erd 확정 후 추가 : 기본적인 예시용
-    public static Member create(String memberId, String memberPassword, String memberNickname, String memberPhone) {
+    public static Member create(String memberId, String memberPassword, String memberPhone) {
+
         return Member.builder()
                 .memberId(memberId)
                 .memberPassword(memberPassword)
-                .memberNickname(memberNickname)
                 .memberPhone(memberPhone)
                 .build();
     }
