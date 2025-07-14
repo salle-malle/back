@@ -33,6 +33,7 @@ spring:
   profiles:
     include:
       - jwt
+      - coolSMS
 logging:
   level:
     org.hibernate.SQL: DEBUG

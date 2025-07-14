@@ -44,6 +44,9 @@ dependencies {
 
 	// bCrput
 	implementation 'org.mindrot:jbcrypt:0.4'
+
+	// coolSMS(메시지 전송)
+	implementation 'net.nurigo:sdk:4.3.2'
 }
 
 tasks.named('test') {
