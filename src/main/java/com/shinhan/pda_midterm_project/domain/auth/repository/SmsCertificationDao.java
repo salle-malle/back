@@ -1,8 +1,6 @@
 package com.shinhan.pda_midterm_project.domain.auth.repository;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.github.benmanes.caffeine.cache.Cache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,32 +9,17 @@ import org.springframework.stereotype.Repository;
 public class SmsCertificationDao {
 
     private static final String PREFIX = "phone:";
-    private static final long TTL_SECONDS = 5 * 60;
-
-    private final Map<String, CacheValue> cache = new ConcurrentHashMap<>();
+    private final Cache<String, String> smsCertificationCache;
 
     public void save(String phone, String code) {
-        long expireAt = Instant.now().getEpochSecond() + TTL_SECONDS;
-        cache.put(PREFIX + phone, new CacheValue(code, expireAt));
+        smsCertificationCache.put(PREFIX + phone, code);
     }
 
     public String getByKey(String phone) {
-        String key = PREFIX + phone;
-        CacheValue value = cache.get(key);
-        if (value == null || value.isExpired()) {
-            cache.remove(key); // 만료됐으면 삭제
-            return null;
-        }
-        return value.code();
+        return smsCertificationCache.getIfPresent(PREFIX + phone);
     }
 
     public void deleteByKey(String phone) {
-        cache.remove(PREFIX + phone);
-    }
-
-    private record CacheValue(String code, long expireAtEpochSec) {
-        boolean isExpired() {
-            return Instant.now().getEpochSecond() > expireAtEpochSec;
-        }
+        smsCertificationCache.invalidate(PREFIX + phone);
     }
 }

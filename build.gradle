@@ -47,6 +47,8 @@ dependencies {
 
 	// coolSMS(메시지 전송)
 	implementation 'net.nurigo:sdk:4.3.2'
+
+	implementation 'com.github.ben-manes.caffeine:caffeine'
 }
 
 tasks.named('test') {

@@ -25,10 +25,8 @@ public class SmsCertificationServiceImpl implements SmsCertificationService {
         smsCertificationDao.save(phone, code);
     }
 
-
     @Override
     public void verifyNumber(String expectedCode, String phoneNumber) {
-
         String actualCode = smsCertificationDao.getByKey(phoneNumber);
 
         if (actualCode == null) {
@@ -38,5 +36,7 @@ public class SmsCertificationServiceImpl implements SmsCertificationService {
         if (!actualCode.equals(expectedCode)) {
             throw new AuthException(ResponseMessages.INVALID_CERTIFICATION_NUMBER);
         }
+
+        smsCertificationDao.deleteByKey(phoneNumber);
     }
 }

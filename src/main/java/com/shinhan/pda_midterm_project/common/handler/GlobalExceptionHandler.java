@@ -1,6 +1,7 @@
 package com.shinhan.pda_midterm_project.common.handler;
 
 import com.shinhan.pda_midterm_project.common.response.Response;
+import com.shinhan.pda_midterm_project.domain.auth.exception.AuthException;
 import com.shinhan.pda_midterm_project.domain.member.exception.MemberException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -29,5 +30,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .badRequest()
                 .body(Response.failure("FORMAT-001", errorMessage));
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<Response<String>> handleAuthException(AuthException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(Response.failure(ex.getCode(), ex.getMessage()));
     }
 }
