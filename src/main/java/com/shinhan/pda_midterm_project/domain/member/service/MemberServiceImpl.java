@@ -16,8 +16,8 @@ public class MemberServiceImpl implements MemberService {
   private final MemberRepository memberRepository;
 
   @Override
-  public Member findById(Long memberId) {
-    return memberRepository.findById(memberId)
+  public Member findById(Long id) {
+    return memberRepository.findById(id)
         .orElseThrow(() -> new MemberException(ResponseMessages.MEMBER_NOT_FOUND));
   }
 
@@ -31,4 +31,9 @@ public class MemberServiceImpl implements MemberService {
         phoneNumber);
   }
 
+  @Override
+  public Member findByMemberId(String memberId) {
+    return memberRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new MemberException(ResponseMessages.MEMBER_NOT_FOUND));
+  }
 }
