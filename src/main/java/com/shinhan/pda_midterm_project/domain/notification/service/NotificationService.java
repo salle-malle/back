@@ -1,7 +1,7 @@
 package com.shinhan.pda_midterm_project.domain.notification.service;
 
 import com.shinhan.pda_midterm_project.common.util.SseEmitterRepository;
-import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class NotificationService {
 
     private final SseEmitterRepository emitterRepository;
+    public NotificationService(SseEmitterRepository emitterRepository) {
+        this.emitterRepository = emitterRepository;
+    }
 
     /**
      * 클라이언트와 SSE 연결을 생성하고 emitter를 저장
@@ -55,6 +57,10 @@ public class NotificationService {
         } else {
             log.warn(">>> [알림 전송 실패] emitter 없음");
         }
+    }
+
+    public Set<Long> getConnectedUserIds() {
+        return emitterRepository.getEmitterMap().keySet();
     }
 
 }
