@@ -1,6 +1,7 @@
 package com.shinhan.pda_midterm_project.domain.notification.service;
 
 import com.shinhan.pda_midterm_project.common.util.SseEmitterRepository;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -54,5 +55,10 @@ public class NotificationService {
         } else {
             log.warn(">>> [알림 전송 실패] emitter 없음");
         }
+    }
+
+    public void sendBatchNotifications() {
+        log.info("배치시작");
+
     }
 }
