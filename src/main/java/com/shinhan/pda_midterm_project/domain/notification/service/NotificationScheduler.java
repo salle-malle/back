@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 public class NotificationScheduler {
     private final NotificationService notificationService;
     private final JobLauncher jobLauncher;
-    private final Job sampleJob;
+    private final Job notificationSendJob;
 
 //    @Scheduled(cron = "*/5 * * * * ?")
 //    @Scheduled(cron = "0 0 8 * * ?")
 //    @Scheduled(cron = "0 */1 * * * ?")
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void sendMorningNotifications() {
         log.info("아침 8시! 접속 중인 유저에게 알림 발송 시작");
 
@@ -29,7 +29,7 @@ public class NotificationScheduler {
             JobParameters params = new JobParametersBuilder()
                     .addLong("time", System.currentTimeMillis())
                     .toJobParameters();
-            jobLauncher.run(sampleJob, params);
+            jobLauncher.run(notificationSendJob, params);
             log.info("Spring Batch Job 실행 완료");
         } catch (Exception e) {
             log.error("Spring Batch Job 실행 중 오류", e);

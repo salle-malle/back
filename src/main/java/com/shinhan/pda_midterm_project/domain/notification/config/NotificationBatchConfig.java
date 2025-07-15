@@ -1,4 +1,4 @@
-package com.shinhan.pda_midterm_project.common.config;
+package com.shinhan.pda_midterm_project.domain.notification.config;
 
 import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
@@ -23,23 +23,23 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableBatchProcessing
-public class BatchConfig {
+public class NotificationBatchConfig {
 
     @Bean
-    public Job sampleJob(JobRepository jobRepository, Step sampleStep) {
-        return new JobBuilder("sampleJob", jobRepository)
-                .start(sampleStep)
+    public Job notificationSendJob(JobRepository jobRepository, Step notificationSendStep) {
+        return new JobBuilder("notificationSendJob", jobRepository)
+                .start(notificationSendStep)
                 .build();
-    }
+}
 
     @Bean
-    public Step sampleStep(JobRepository jobRepository,
+    public Step notificationSendStep(JobRepository jobRepository,
                            PlatformTransactionManager transactionManager,
                            ListItemReader<Long> memberIdReader,
                            ItemProcessor<Long, List<Notification>> notificationProcessor,
                            ItemWriter<List<Notification>> notificationWriter) {
 
-        return new StepBuilder("sampleStep", jobRepository)
+        return new StepBuilder("notificationSendStep", jobRepository)
                 .<Long, List<Notification>>chunk(5, transactionManager) // 일단 테스트 수준에서 5명씩 처리
                 .reader(memberIdReader)
                 .processor(notificationProcessor)
