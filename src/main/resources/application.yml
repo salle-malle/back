@@ -34,6 +34,12 @@ spring:
     include:
       - jwt
       - coolSMS
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
