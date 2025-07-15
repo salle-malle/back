@@ -57,8 +57,4 @@ public class NotificationService {
         }
     }
 
-    public void sendBatchNotifications() {
-        log.info("배치시작");
-
-    }
 }
