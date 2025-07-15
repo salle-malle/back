@@ -1,8 +1,11 @@
 package com.shinhan.pda_midterm_project.domain.notification.service;
 
 import com.shinhan.pda_midterm_project.common.util.SseEmitterRepository;
+import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
+import com.shinhan.pda_midterm_project.domain.notification.repository.NotificationRepository;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 public class NotificationService {
 
     private final SseEmitterRepository emitterRepository;
-    public NotificationService(SseEmitterRepository emitterRepository) {
+    private final NotificationRepository notificationRepository;
+
+    public NotificationService(SseEmitterRepository emitterRepository, NotificationRepository notificationRepository) {
         this.emitterRepository = emitterRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     /**
@@ -23,6 +29,7 @@ public class NotificationService {
      * @return SseEmitter
      */
     public SseEmitter connect(Long memberId) {
+        log.info("✅ [connect] memberId: {} 접속 시도", memberId);
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 
         emitter.onCompletion(() -> emitterRepository.delete(memberId));
@@ -30,6 +37,8 @@ public class NotificationService {
         emitter.onError((e) -> emitterRepository.delete(memberId));
 
         emitterRepository.save(memberId, emitter);
+        log.info("✅ [connect] memberId: {} 접속 성공, 현재 emitterMap: {}", memberId, emitterRepository.getEmitterMap());
+
 
         return emitter;
     }
@@ -61,6 +70,13 @@ public class NotificationService {
 
     public Set<Long> getConnectedUserIds() {
         return emitterRepository.getEmitterMap().keySet();
+    }
+
+    public List<Notification> getTodaysNotifications(Long memberId) {
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
+
+        return notificationRepository.findByMemberIdAndCreatedAtBetween(memberId, startOfDay, endOfDay);
     }
 
 }
