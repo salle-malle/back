@@ -23,7 +23,4 @@ public class MemberStockSnapshot extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "investment_type_news_comment_id")
   private InvestmentTypeNewsComment investmentTypeNewsComment;
-
-  @JoinColumn(name = "user_scrap")
-  private Boolean userScrap;
 }
