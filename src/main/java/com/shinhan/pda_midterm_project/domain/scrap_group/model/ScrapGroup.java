@@ -28,6 +28,10 @@ public class ScrapGroup extends BaseEntity {
             .scrapGroupName(scrapGroupName)
             .build();
   }
+
+  public void updateName(String newName) {
+    this.scrapGroupName = newName;
+  }
 }
 
 
