@@ -61,9 +61,22 @@ public class Member extends BaseEntity {
     @Column
     private Boolean memberIsRead;
 
+    @Column(columnDefinition = "TEXT")
+    private String kisAccessToken;
+
     public void updateProfile(String memberNickname, String memberPhone) {
         this.memberNickname = memberNickname;
         this.memberPhone = memberPhone;
+    }
+
+    public void updateKisAccessToken(String kisAccessToken) {
+        this.kisAccessToken = kisAccessToken;
+    }
+
+    public void setKisInfo(String memberAppKey, String memberAppSecret, String memberAccountNumber) {
+        this.memberAppKey = memberAppKey;
+        this.memberAppSecret = memberAppSecret;
+        this.memberAccountNumber = memberAccountNumber;
     }
 
     // TODO: 나중에 erd 확정 후 추가 : 기본적인 예시용
