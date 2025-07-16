@@ -14,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +55,9 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
       headers.set("custtype", "P");
 
       // GET 요청으로 변경하고 파라미터를 쿼리스트링으로 전달
-      UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(STOCK_DETAIL_URL)
+      // UriComponentsBuilder builder =
+      // UriComponentsBuilder.fromHttpUrl(STOCK_DETAIL_URL)
+      UriComponentsBuilder builder = UriComponentsBuilder.newInstance().uri(URI.create(STOCK_DETAIL_URL))
           .queryParam("AUTH", request.getAUTH())
           .queryParam("EXCD", request.getEXCD())
           .queryParam("SYMB", request.getSYMB());
@@ -85,7 +88,7 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
       headers.set("custtype", "P");
 
       // GET 요청으로 변경하고 파라미터를 쿼리스트링으로 전달
-      UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(BALANCE_URL)
+      UriComponentsBuilder builder = UriComponentsBuilder.newInstance().uri(URI.create(BALANCE_URL))
           .queryParam("CANO", request.getCANO())
           .queryParam("ACNT_PRDT_CD", request.getACNT_PRDT_CD())
           .queryParam("OVRS_EXCG_CD", request.getOVRS_EXCG_CD())

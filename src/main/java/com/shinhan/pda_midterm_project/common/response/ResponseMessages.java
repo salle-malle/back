@@ -31,11 +31,11 @@ public enum ResponseMessages {
     GET_SCRAP_GROUP_SUCCESS("GROUP-001", "유저 스크랩 그룹 가져오기 성공"),
     GET_SCRAP_GROUPED_SUCCESS("GROUPED-001", "유저 스크랩 그룹의 스크랩들 가져오기 성공"),
     POST_SCRAP_GROUPED_SUCCESS("GROUP-002", "유저 스크랩 그룹 추가 성공"),
-    CREATE_SCRAP_GROUPED_SUCCESS("GROUPED-002","스크랩 추가 성공"),
-    DELETE_SCRAP_GROUPED_SUCCESS("GROUPED-003","스크랩 삭제 성공"),
-    PUT_SCRAP_GROUP_NAME_SUCCESS("GROUP-003","스크랩 그룹 이름 업데이트 성공"),
-    DELETE_SCRAP_GROUP_SUCCESS("GROUP-004","스크랩 그룹 삭제 성공");
-  
+    CREATE_SCRAP_GROUPED_SUCCESS("GROUPED-002", "스크랩 추가 성공"),
+    DELETE_SCRAP_GROUPED_SUCCESS("GROUPED-003", "스크랩 삭제 성공"),
+    PUT_SCRAP_GROUP_NAME_SUCCESS("GROUP-003", "스크랩 그룹 이름 업데이트 성공"),
+    DELETE_SCRAP_GROUP_SUCCESS("GROUP-004", "스크랩 그룹 삭제 성공"),
+
     /**
      * common
      */
