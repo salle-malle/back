@@ -3,7 +3,6 @@ package com.shinhan.pda_midterm_project.common.response;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 @Getter
 public enum ResponseMessages {
@@ -36,6 +35,12 @@ public enum ResponseMessages {
     DELETE_SCRAP_GROUPED_SUCCESS("GROUPED-003","스크랩 삭제 성공"),
     PUT_SCRAP_GROUP_NAME_SUCCESS("GROUP-003","스크랩 그룹 이름 업데이트 성공"),
     DELETE_SCRAP_GROUP_SUCCESS("GROUP-004","스크랩 그룹 삭제 성공");
+  
+    /**
+     * common
+     */
+    SUCCESS("SUCCESS-001", "요청이 성공적으로 처리되었습니다."),
+    API_ERROR("API-001", "API 호출 중 오류가 발생했습니다.");
 
     // 도메인 추가해주세요
     private final String code;

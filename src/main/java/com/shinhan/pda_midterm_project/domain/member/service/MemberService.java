@@ -10,4 +10,9 @@ public interface MemberService {
     Member findByMemberId(String memberId);
 
     void saveMember(Member member);
+
+    /**
+     * 회원가입 후 해외주식 잔고 조회 및 저장
+     */
+    void fetchAndSaveMemberStocks(Member member);
 }
