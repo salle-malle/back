@@ -1,6 +1,9 @@
 package com.shinhan.pda_midterm_project.presentation.scrapGroup.controller;
 
+import com.shinhan.pda_midterm_project.common.annotation.Auth;
+import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.response.Response;
+import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.scrap_group.service.ScrapGroupService;
 import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.ScrapGroupDeleteRequestDto;
 import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.ScrapGroupNameRequestDto;
@@ -21,9 +24,10 @@ public class ScrapGroupController {
     private final ScrapGroupService scrapGroupService;
 
     @GetMapping("")
-    public ResponseEntity<Response<List<ScrapGroupResponseDto>>> getScrapGroup() { // ✅ 응답 타입을 DTO 리스트로 변경
+    @MemberOnly
+    public ResponseEntity<Response<List<ScrapGroupResponseDto>>> getScrapGroup(@Auth Accessor accessor) { // ✅ 응답 타입을 DTO 리스트로 변경
         // 1. 사용자 ID를 2L로 고정
-        Long memberId = 2L;
+        Long memberId = accessor.memberId();
 
         // 2. Service를 호출하여 스크랩 그룹 목록 조회
         List<ScrapGroupResponseDto> scrapGroups = scrapGroupService.getScrapGroup(memberId);
@@ -39,9 +43,10 @@ public class ScrapGroupController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Response<ScrapGroupResponseDto>> createScrapGroup() { // ✅ 응답 타입을 DTO 리스트로 변경
+    @MemberOnly
+    public ResponseEntity<Response<ScrapGroupResponseDto>> createScrapGroup(@Auth Accessor accessor) { // ✅ 응답 타입을 DTO 리스트로 변경
         // 1. 사용자 ID를 2L로 고정
-        Long memberId = 1L;
+        Long memberId = accessor.memberId();
         String scrapGroupTitle = "title";
 
         // 2. Service를 호출하여 스크랩 그룹 목록 추가
@@ -73,10 +78,11 @@ public class ScrapGroupController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Response<ScrapGroupResponseDto>> deleteScrapGroup(
+    @MemberOnly
+    public ResponseEntity<Response<ScrapGroupResponseDto>> deleteScrapGroup(@Auth Accessor accessor,
             @RequestBody ScrapGroupDeleteRequestDto requestDto)
     {
-        Long memberId = 2L;
+        Long memberId = accessor.memberId();
         ScrapGroupResponseDto scrapGroups = scrapGroupService.deleteScrapGroup(memberId, requestDto.getScrapGroupId());
 
         return ResponseEntity
