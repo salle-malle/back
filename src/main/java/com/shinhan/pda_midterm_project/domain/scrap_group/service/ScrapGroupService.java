@@ -14,4 +14,8 @@ public interface ScrapGroupService {
     List<ScrapGroupResponseDto> getScrapGroup(Long memberId);
 
     ScrapGroupResponseDto createScrapGroup(Long memberId, String ScrapGroupName);
+
+    ScrapGroupResponseDto updateScrapGroup(Long scrapGroupId, String scrapGroupName);
+
+    ScrapGroupResponseDto deleteScrapGroup(Long memberId, Long scrapGroupedId);
 }

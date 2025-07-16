@@ -57,7 +57,8 @@ public interface ScrapGroupedRepository extends JpaRepository<ScrapGrouped, Long
             "JOIN FETCH s.stock " +
             "WHERE sg.id = :scrapGroupId " +           // 2. 특정 스크랩 그룹 ID와 일치하고,
             "AND mss.member.id = :memberId " +       // 1. 스냅샷의 소유주가 특정 멤버이며,
-            "AND mss.userScrap = true " +            // 1. 해당 스냅샷이 스크랩(true) 상태일 때
             "ORDER BY sgd.createdAt ASC")
     List<ScrapGrouped> findScrapsInGroup(@Param("memberId") Long memberId, @Param("scrapGroupId") Long scrapGroupId);
+    boolean existsByScrapGroupIdAndMemberStockSnapshotId(Long scrapGroupId, Long memberStockSnapshotId);
+    void deleteAllByScrapGroupId(Long scrapGroupId);
 }

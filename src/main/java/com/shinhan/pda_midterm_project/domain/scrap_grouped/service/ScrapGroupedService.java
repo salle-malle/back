@@ -3,6 +3,8 @@ package com.shinhan.pda_midterm_project.domain.scrap_grouped.service;
 
 import com.shinhan.pda_midterm_project.domain.scrap_group.model.ScrapGroup;
 import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.ScrapGroupResponseDto;
+import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedDeleteRequestDto;
+import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedPushRequestDto;
 import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedResponseDto;
 
 import java.util.List;
@@ -16,4 +18,7 @@ public interface ScrapGroupedService {
      * @return 스크랩 그룹 DTO 목록
      */
     //List<ScrapGroupResponseDto> getScrapedGroup(Long memberId);
+    ScrapGroupedResponseDto pushScrap(Long memberId, ScrapGroupedPushRequestDto requestDto);
+
+    ScrapGroupedResponseDto deleteScrap(Long memberId, Long scrapGroupedId);
 }
