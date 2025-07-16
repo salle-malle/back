@@ -1,5 +1,6 @@
-package com.shinhan.pda_midterm_project.domain.notification.config;
+package com.shinhan.pda_midterm_project.common.config;
 
+import com.shinhan.pda_midterm_project.domain.news.service.NewsCrawlingTasklet;
 import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -22,15 +24,53 @@ import java.util.List;
 
 @Slf4j
 @Configuration
-@EnableBatchProcessing
-public class NotificationBatchConfig {
+//@EnableBatchProcessing
+public class BatchConfig {
+    private final NewsCrawlingTasklet newsCrawlingTasklet;
+
+    public BatchConfig(NewsCrawlingTasklet newsCrawlingTasklet) {
+        this.newsCrawlingTasklet = newsCrawlingTasklet;
+    }
+
+    @Bean
+    public Job newsCrawlingJob(JobRepository jobRepository, Step newsCrawlingStep) {
+        return new JobBuilder("newsCrawlingJob", jobRepository)
+                .start(newsCrawlingStep)
+                .build();
+    }
+
+    @Bean
+    public Step newsCrawlingStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("newsCrawlingStep", jobRepository)
+                .tasklet(newsCrawlingTasklet, transactionManager)
+                .build();
+    }
+
+    @Bean
+    public Job sampleJob(JobRepository jobRepository, Step sampleStep) {
+        return new JobBuilder("sampleJob", jobRepository)
+                .start(sampleStep)
+                .build();
+    }
+
+    @Bean
+    public Step sampleStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("sampleStep", jobRepository)
+                .tasklet((contribution, chunkContext) -> {
+                    log.info(">>>>> This is SampleJob's Step!");
+                    return RepeatStatus.FINISHED;
+                }, transactionManager)
+                .build();
+    }
+
+    /// ////////////////////
 
     @Bean
     public Job notificationSendJob(JobRepository jobRepository, Step notificationSendStep) {
         return new JobBuilder("notificationSendJob", jobRepository)
                 .start(notificationSendStep)
                 .build();
-}
+    }
 
     @Bean
     public Step notificationSendStep(JobRepository jobRepository,
