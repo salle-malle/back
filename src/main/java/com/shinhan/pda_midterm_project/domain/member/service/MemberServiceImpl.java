@@ -2,7 +2,6 @@ package com.shinhan.pda_midterm_project.domain.member.service;
 
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.service.KoreaInvestmentService;
-import com.shinhan.pda_midterm_project.domain.auth.service.TokenExpirationChecker;
 import com.shinhan.pda_midterm_project.domain.member.exception.MemberException;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.repository.MemberRepository;
@@ -30,7 +29,6 @@ public class MemberServiceImpl implements MemberService {
     private final KoreaInvestmentService koreaInvestmentService;
     private final MemberStockRepository memberStockRepository;
     private final StockRepository stockRepository;
-    private final TokenExpirationChecker tokenExpirationChecker;
 
     @Override
     public Member findById(Long id) {
