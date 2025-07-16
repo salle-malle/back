@@ -139,17 +139,6 @@ public class MemberStockServiceImpl implements MemberStockService {
     }
   }
 
-  private Integer parseInteger(String value) {
-    if (value == null || value.trim().isEmpty()) {
-      return 0;
-    }
-    try {
-      return Integer.parseInt(value.trim());
-    } catch (NumberFormatException e) {
-      return 0;
-    }
-  }
-
   @Override
   @Transactional(readOnly = true)
   public List<MemberStock> getMemberStocks(Member member) {

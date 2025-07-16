@@ -30,7 +30,6 @@ public class MemberServiceImpl implements MemberService {
     private final KoreaInvestmentService koreaInvestmentService;
     private final MemberStockRepository memberStockRepository;
     private final StockRepository stockRepository;
-    private final TokenExpirationChecker tokenExpirationChecker;
 
     @Override
     public Member findById(Long id) {
