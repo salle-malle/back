@@ -39,7 +39,6 @@ public class SummaryService {
     private String apiKey;
 
     private final SummaryRepository summaryRepository;
-
     private final InvestmentTypeRepository investmentTypeRepository;
     private final InvestmentTypeNewsCommentRepository commentRepository;
     private final MemberRepository memberRepository;
@@ -98,17 +97,6 @@ public class SummaryService {
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("투자 성향에 맞는 첨언이 없습니다."));
 
-//
-//
-//
-//            log.info("memberId: {}, 투자성향: {}, (id: {})",member.getId(), memberType.getInvestmentName(), memberType.getId());
-//
-//            // 4. 해당 성향의 comment 찾기
-//            InvestmentTypeNewsComment matchedComment = savedComments.stream()
-//                    .filter(c -> c.getInvestmentType().equals(memberType))
-//                    .findFirst()
-//                    .orElseThrow(() -> new IllegalStateException("투자 성향에 맞는 첨언이 없습니다."));
-//
             // 5. MemberStockSnapshot 저장
             MemberStockSnapshot snapshot = MemberStockSnapshot.builder()
                     .member(member)
