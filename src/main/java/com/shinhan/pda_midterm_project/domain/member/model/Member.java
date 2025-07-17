@@ -1,5 +1,6 @@
 package com.shinhan.pda_midterm_project.domain.member.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.shinhan.pda_midterm_project.common.util.BaseEntity;
 import com.shinhan.pda_midterm_project.domain.investment_type.model.InvestmentType;
 import jakarta.persistence.Column;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Member extends BaseEntity {
 
     @Id
