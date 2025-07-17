@@ -1,12 +1,17 @@
 package com.shinhan.pda_midterm_project.common.config;
 
+import com.shinhan.pda_midterm_project.domain.disclosure.DisclosureProcessor;
+import com.shinhan.pda_midterm_project.domain.disclosure.DisclosureReader;
+import com.shinhan.pda_midterm_project.domain.disclosure.DisclosureWriter;
+import com.shinhan.pda_midterm_project.domain.disclosure.model.Disclosure;
 import com.shinhan.pda_midterm_project.domain.news.service.NewsCrawlingTasklet;
 import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
+import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -25,11 +30,28 @@ import java.util.List;
 @Slf4j
 @Configuration
 //@EnableBatchProcessing
+@RequiredArgsConstructor
 public class BatchConfig {
     private final NewsCrawlingTasklet newsCrawlingTasklet;
+    private final DisclosureReader disclosureReader;
+    private final DisclosureProcessor disclosureProcessor;
+    private final DisclosureWriter disclosureWriter;
 
-    public BatchConfig(NewsCrawlingTasklet newsCrawlingTasklet) {
-        this.newsCrawlingTasklet = newsCrawlingTasklet;
+    @Bean
+    public Job disclosureJob(JobRepository jobRepository, Step disclosureChunkStep) {
+        return new JobBuilder("disclosureJob", jobRepository)
+                .start(disclosureChunkStep)
+                .build();
+    }
+
+    @Bean
+    public Step disclosureChunkStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("disclosureChunkStep", jobRepository)
+                .<Stock, Disclosure>chunk(100, transactionManager)
+                .reader(disclosureReader)
+                .processor(disclosureProcessor)
+                .writer(disclosureWriter)
+                .build();
     }
 
     @Bean

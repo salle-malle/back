@@ -15,14 +15,13 @@ import org.springframework.stereotype.Component;
 public class DisclosureBatchScheduler {
 
     private final JobLauncher jobLauncher;
-    private final Job disclosureJob; // BatchConfig 등에서 @Bean으로 등록한 Job과 이름 일치해야 함
+    private final Job disclosureJob;
 
-    // 2분에 한 번 실행: "0 */2 * * * *"
-    @Scheduled(cron = "0 */2 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 30 6 * * MON-FRI", zone = "Asia/Seoul")
     public void runDisclosureBatch() {
         try {
             JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis()) // 중복인터벌 방지(항상 새로운 파라미터)
+                    .addLong("time", System.currentTimeMillis())
                     .toJobParameters();
             jobLauncher.run(disclosureJob, jobParameters);
             log.info("2분마다 Disclosure Job 실행!");
