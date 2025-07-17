@@ -5,15 +5,30 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.shinhan.pda_midterm_project.domain.investment_type.repository.InvestmentTypeRepository;
+import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.model.InvestmentTypeNewsComment;
+import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.repository.InvestmentTypeNewsCommentRepository;
+import com.shinhan.pda_midterm_project.domain.member.model.Member;
+import com.shinhan.pda_midterm_project.domain.member.repository.MemberRepository;
+import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.model.MemberStockSnapshot;
+import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.repository.MemberStockSnapshotRepository;
+import com.shinhan.pda_midterm_project.domain.news.model.News;
+import com.shinhan.pda_midterm_project.domain.news.repository.NewsRepository;
 import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
-import com.shinhan.pda_midterm_project.domain.stock.repository.StockRepository;
 import com.shinhan.pda_midterm_project.domain.summary.model.Summary;
 import com.shinhan.pda_midterm_project.domain.summary.repository.SummaryRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SummaryService {
@@ -22,6 +37,12 @@ public class SummaryService {
     private String apiKey;
 
     private final SummaryRepository summaryRepository;
+    private final InvestmentTypeRepository investmentTypeRepository;
+    private final InvestmentTypeNewsCommentRepository commentRepository;
+    private final MemberRepository memberRepository;
+    private final MemberStockSnapshotRepository memberStockSnapshotRepository;
+    private final NewsRepository newsRepository;
+
 
     private OpenAIClient client;
 
@@ -35,16 +56,57 @@ public class SummaryService {
     }
 
     @Transactional
-    public Summary summarizeAndSave(String content, Stock stock) {
+    protected Summary summarizeAndSave(String content, Stock stock) {
         String summaryText = summarize(content);
 
-        Summary summary = Summary.builder()
-                .stock(stock)
-                .newsContent(summaryText)
-                .build();
+        // 1. Summary 저장
+        Summary summary = summaryRepository.save(
+                Summary.builder()
+                        .stock(stock)
+                        .newsContent(summaryText)
+                        .build()
+        );
 
-        return summaryRepository.save(summary);
+        // 2. 투자 성향별 첨언 저장
+        List<InvestmentTypeNewsComment> savedComments = investmentTypeRepository.findAll().stream()
+                .map(type -> {
+                    String comment = generateCommentary(summaryText, type.getInvestmentName());
+                    InvestmentTypeNewsComment commentEntity = InvestmentTypeNewsComment.builder()
+                            .summary(summary)
+                            .investmentType(type)
+                            .investmentTypeNewsContent(comment)
+                            .build();
+                    return commentRepository.save(commentEntity);
+                })
+                .toList();
+
+        // 3. 종목을 보유한 멤버 조회
+        List<Member> holdingMembers = memberRepository.findAllByStockId(stock.getStockId());
+
+        for (Member member : holdingMembers) {
+            Long memberTypeId = member.getInvestmentType().getId();
+            log.info("memberId: {}, 투자성향 ID: {}", member.getId(), memberTypeId);
+//            InvestmentType memberType = member.getInvestmentType();
+            if (memberTypeId == null) {
+                continue;
+            }
+            InvestmentTypeNewsComment matchedComment = savedComments.stream()
+                    .filter(c -> c.getInvestmentType().getId().equals(memberTypeId))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("투자 성향에 맞는 첨언이 없습니다."));
+
+            // 5. MemberStockSnapshot 저장
+            MemberStockSnapshot snapshot = MemberStockSnapshot.builder()
+                    .member(member)
+                    .investmentTypeNewsComment(matchedComment)
+                    .build();
+
+            memberStockSnapshotRepository.save(snapshot);
+        }
+
+        return summary;
     }
+
 
     /**
      * 여러개의 미국 영어 기사들을 가지고 전체적인 요약
@@ -72,7 +134,7 @@ public class SummaryService {
     /**
      * 성향에 따른 첨언 생성
      */
-    public String generateCommentary(String summaryContent, String investmentTypeName) {
+    private String generateCommentary(String summaryContent, String investmentTypeName) {
         String prompt = buildCommentaryPrompt(summaryContent, investmentTypeName);
 
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
@@ -106,4 +168,32 @@ public class SummaryService {
                 + "- 이 사용자는 " + description + "를 지향하는 투자자야. 도움이 되는 관점을 포함해 작성해줘.\n"
                 + "- 한국어로 작성해. 문장을 자연스럽게 마무리해. 서술형으로 존댓말로 투자 비서처럼 작성해줘. 500자 이내로 작성해줘";
     }
+
+
+    public void generateSummaryForTodayNews() {
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        List<News> todayNews = newsRepository.findAllByCreatedAtBetween(startOfDay, endOfDay);
+
+        // 종목별로 뉴스 그룹핑
+        Map<Stock, List<News>> newsByStock = todayNews.stream()
+                .filter(n -> n.getStock() != null)
+                .collect(Collectors.groupingBy(News::getStock));
+
+        for (Map.Entry<Stock, List<News>> entry : newsByStock.entrySet()) {
+            Stock stock = entry.getKey();
+            List<News> newsList = entry.getValue();
+
+            // 뉴스 내용 합치기
+            String combinedContent = newsList.stream()
+                    .map(News::getNewsContent)
+                    .collect(Collectors.joining("\n\n"));
+
+            // 요약 및 저장
+            summarizeAndSave(combinedContent, stock);
+        }
+    }
+
+
 }

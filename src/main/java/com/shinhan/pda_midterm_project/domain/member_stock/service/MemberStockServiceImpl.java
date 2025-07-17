@@ -142,7 +142,7 @@ public class MemberStockServiceImpl implements MemberStockService {
   @Override
   @Transactional(readOnly = true)
   public List<MemberStock> getMemberStocks(Member member) {
-    return memberStockRepository.findByMember(member);
+    return memberStockRepository.findByMemberWithStock(member);
   }
 
   @Override
