@@ -36,8 +36,8 @@ public class SummaryController {
     /**
      * 테스트용: 투자 성향별 첨언 생성
      */
-    @PostMapping("/commentary")
-    public String generateCommentary(@RequestParam String type, @RequestBody String summaryContent) {
-        return summaryService.generateCommentary(summaryContent, type);
-    }
+//    @PostMapping("/commentary")
+//    public String generateCommentary(@RequestParam String type, @RequestBody String summaryContent) {
+//        return summaryService.generateCommentary(summaryContent, type);
+//    }
 }

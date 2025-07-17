@@ -5,10 +5,15 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.shinhan.pda_midterm_project.domain.investment_type.model.InvestmentType;
+import com.shinhan.pda_midterm_project.domain.investment_type.repository.InvestmentTypeRepository;
+import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.model.InvestmentTypeNewsComment;
+import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.repository.InvestmentTypeNewsCommentRepository;
 import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
 import com.shinhan.pda_midterm_project.domain.stock.repository.StockRepository;
 import com.shinhan.pda_midterm_project.domain.summary.model.Summary;
 import com.shinhan.pda_midterm_project.domain.summary.repository.SummaryRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +27,9 @@ public class SummaryService {
     private String apiKey;
 
     private final SummaryRepository summaryRepository;
+
+    private final InvestmentTypeRepository investmentTypeRepository;
+    private final InvestmentTypeNewsCommentRepository commentRepository;
 
     private OpenAIClient client;
 
@@ -43,7 +51,23 @@ public class SummaryService {
                 .newsContent(summaryText)
                 .build();
 
-        return summaryRepository.save(summary);
+        summaryRepository.save(summary);
+
+        List<InvestmentType> types = investmentTypeRepository.findAll();
+        for (InvestmentType type : types) {
+            String comment = generateCommentary(summaryText, type.getInvestmentName());
+
+            InvestmentTypeNewsComment commentEntity = InvestmentTypeNewsComment.builder()
+                    .summary(summary)
+                    .investmentType(type)
+                    .investmentTypeNewsContent(comment)
+                    .build();
+
+            commentRepository.save(commentEntity);
+        }
+
+
+        return summary;
     }
 
     /**
@@ -72,7 +96,7 @@ public class SummaryService {
     /**
      * 성향에 따른 첨언 생성
      */
-    public String generateCommentary(String summaryContent, String investmentTypeName) {
+    private String generateCommentary(String summaryContent, String investmentTypeName) {
         String prompt = buildCommentaryPrompt(summaryContent, investmentTypeName);
 
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
