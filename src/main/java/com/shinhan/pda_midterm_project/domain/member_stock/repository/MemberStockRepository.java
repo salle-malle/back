@@ -21,4 +21,8 @@ public interface MemberStockRepository extends JpaRepository<MemberStock, Long> 
   Optional<MemberStock> findByMemberAndStock(Member member, Stock stock);
 
   Optional<MemberStock> findByMemberAndStock_StockId(Member member, String stockId);
+
+  @Query("SELECT ms.member FROM MemberStock ms WHERE ms.stock.stockId = :stockId")
+  List<Member> findAllByStockId(@Param("stockId") String stockId);
+
 }
