@@ -15,7 +15,7 @@ public class TotalController {
 
     @GetMapping("/debug/print-member-ids")
     public String printMemberIds() {
-        totalSummaryService.printAllMemberIds();
+        totalSummaryService.generateTotalSummaryForAllMembers();
         return "Printed all member IDs to log.";
     }
 }

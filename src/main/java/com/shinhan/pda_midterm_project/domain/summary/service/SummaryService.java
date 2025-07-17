@@ -5,7 +5,6 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
-import com.shinhan.pda_midterm_project.domain.investment_type.model.InvestmentType;
 import com.shinhan.pda_midterm_project.domain.investment_type.repository.InvestmentTypeRepository;
 import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.model.InvestmentTypeNewsComment;
 import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.repository.InvestmentTypeNewsCommentRepository;
@@ -16,7 +15,6 @@ import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.repository.M
 import com.shinhan.pda_midterm_project.domain.news.model.News;
 import com.shinhan.pda_midterm_project.domain.news.repository.NewsRepository;
 import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
-import com.shinhan.pda_midterm_project.domain.stock.repository.StockRepository;
 import com.shinhan.pda_midterm_project.domain.summary.model.Summary;
 import com.shinhan.pda_midterm_project.domain.summary.repository.SummaryRepository;
 import java.time.LocalDate;
@@ -196,4 +194,6 @@ public class SummaryService {
             summarizeAndSave(combinedContent, stock);
         }
     }
+
+
 }
