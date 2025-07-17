@@ -5,9 +5,14 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.ChatModel;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
+import com.shinhan.pda_midterm_project.domain.stock.repository.StockRepository;
+import com.shinhan.pda_midterm_project.domain.summary.model.Summary;
+import com.shinhan.pda_midterm_project.domain.summary.repository.SummaryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +20,8 @@ public class SummaryService {
 
     @Value("${openai.api-key}")
     private String apiKey;
+
+    private final SummaryRepository summaryRepository;
 
     private OpenAIClient client;
 
@@ -27,7 +34,24 @@ public class SummaryService {
         return client;
     }
 
-    public String summarize(String content) {
+    @Transactional
+    public Summary summarizeAndSave(String content, Stock stock) {
+        String summaryText = summarize(content);
+
+        Summary summary = Summary.builder()
+                .stock(stock)
+                .newsContent(summaryText)
+                .build();
+
+        return summaryRepository.save(summary);
+    }
+
+    /**
+     * 여러개의 미국 영어 기사들을 가지고 전체적인 요약
+     * @param content
+     * @return
+     */
+    private String summarize(String content) {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model(ChatModel.GPT_3_5_TURBO)
                 .addUserMessage("너는 전문 투자 뉴스 요약가야. 내가 제공하는 영어 뉴스 기사들의 내용을 모두 읽고, 전체적으로 하나의 흐름으로 종합해 요약해줘.  \n"
