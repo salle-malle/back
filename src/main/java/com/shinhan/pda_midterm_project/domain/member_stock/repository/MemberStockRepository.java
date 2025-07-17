@@ -15,6 +15,9 @@ import java.util.Optional;
 public interface MemberStockRepository extends JpaRepository<MemberStock, Long> {
   List<MemberStock> findByMember(Member member);
 
+  @Query("SELECT ms FROM MemberStock ms JOIN FETCH ms.stock WHERE ms.member = :member")
+  List<MemberStock> findByMemberWithStock(@Param("member") Member member);
+
   Optional<MemberStock> findByMemberAndStock(Member member, Stock stock);
 
   Optional<MemberStock> findByMemberAndStock_StockId(Member member, String stockId);

@@ -11,9 +11,13 @@ import com.shinhan.pda_midterm_project.presentation.kis.dto.request.KisStockDeta
 import com.shinhan.pda_midterm_project.presentation.kis.dto.response.KisBalanceResponse;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.response.KisStockDetailResponse;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.response.KisTokenResponse;
+import com.shinhan.pda_midterm_project.presentation.kis.dto.response.MemberStockResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/kis")
@@ -135,15 +139,19 @@ public class KisController {
    * 회원 주식 목록 조회
    */
   @GetMapping("/member-stocks/{memberId}")
-  public ResponseEntity<Response<?>> getMemberStocks(@PathVariable Long memberId) {
+  public ResponseEntity<Response<List<MemberStockResponseDto>>> getMemberStocks(@PathVariable Long memberId) {
     try {
       Member member = memberService.findById(memberId);
       var memberStocks = memberStockService.getMemberStocks(member);
 
+      List<MemberStockResponseDto> responseDtos = memberStocks.stream()
+          .map(MemberStockResponseDto::new)
+          .collect(Collectors.toList());
+
       return ResponseEntity.ok(Response.success(
           ResponseMessages.SUCCESS.getCode(),
           ResponseMessages.SUCCESS.getMessage(),
-          memberStocks));
+          responseDtos));
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(Response.failure(
           ResponseMessages.API_ERROR.getCode(),

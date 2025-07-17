@@ -37,6 +37,36 @@ public enum ResponseMessages {
     DELETE_SCRAP_GROUP_SUCCESS("GROUP-004", "스크랩 그룹 삭제 성공"),
 
     /**
+     * earning call
+     */
+    EARNING_CALL_UPLOAD_SUCCESS("EARNING-001", "어닝콜 데이터 업로드를 성공했습니다."),
+    EARNING_CALL_UPLOAD_FAIL("EARNING-002", "어닝콜 데이터 업로드 중 오류가 발생했습니다."),
+    EARNING_CALL_GET_ALL_SUCCESS("EARNING-003", "어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_GET_BY_STOCK_SUCCESS("EARNING-004", "특정 주식의 어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_GET_BY_DATE_SUCCESS("EARNING-005", "특정 날짜의 어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_GET_FAIL("EARNING-006", "어닝콜 데이터 조회 중 오류가 발생했습니다."),
+    EARNING_CALL_CSV_PARSE_ERROR("EARNING-007", "CSV 파일 파싱 중 오류가 발생했습니다."),
+    EARNING_CALL_STOCK_NOT_FOUND("EARNING-008", "해당 주식 정보를 찾을 수 없습니다."),
+    EARNING_CALL_FILE_EMPTY("EARNING-009", "업로드된 파일이 비어있습니다."),
+    EARNING_CALL_FILE_FORMAT_ERROR("EARNING-010", "지원하지 않는 파일 형식입니다. CSV 파일만 업로드 가능합니다."),
+    EARNING_CALL_DATA_SAVE_SUCCESS("EARNING-011", "어닝콜 데이터가 성공적으로 저장되었습니다."),
+    EARNING_CALL_DATA_SAVE_FAIL("EARNING-012", "어닝콜 데이터 저장 중 오류가 발생했습니다."),
+    EARNING_CALL_NO_DATA_FOUND("EARNING-013", "조회된 어닝콜 데이터가 없습니다."),
+    EARNING_CALL_GET_BY_MEMBER_SUCCESS("EARNING-014", "사용자 보유종목의 어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_MEMBER_NOT_FOUND("EARNING-015", "사용자 정보를 찾을 수 없습니다."),
+    EARNING_CALL_MEMBER_NO_STOCKS("EARNING-016", "사용자의 보유종목이 없습니다."),
+
+    /**
+     * stock
+     */
+    STOCK_CREATE_SUCCESS("STOCK-001", "주식 데이터가 성공적으로 생성되었습니다."),
+    STOCK_CREATE_FAIL("STOCK-002", "주식 데이터 생성 중 오류가 발생했습니다."),
+    STOCK_GET_ALL_SUCCESS("STOCK-003", "주식 데이터 조회를 성공했습니다."),
+    STOCK_GET_ALL_FAIL("STOCK-004", "주식 데이터 조회 중 오류가 발생했습니다."),
+    STOCK_NOT_FOUND("STOCK-005", "해당 주식 정보를 찾을 수 없습니다."),
+    STOCK_ALREADY_EXISTS("STOCK-006", "이미 존재하는 주식 정보입니다."),
+
+    /**
      * common
      */
     SUCCESS("SUCCESS-001", "요청이 성공적으로 처리되었습니다."),
