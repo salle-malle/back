@@ -9,6 +9,10 @@ import com.shinhan.pda_midterm_project.domain.investment_type.model.InvestmentTy
 import com.shinhan.pda_midterm_project.domain.investment_type.repository.InvestmentTypeRepository;
 import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.model.InvestmentTypeNewsComment;
 import com.shinhan.pda_midterm_project.domain.investment_type_news_comment.repository.InvestmentTypeNewsCommentRepository;
+import com.shinhan.pda_midterm_project.domain.member.model.Member;
+import com.shinhan.pda_midterm_project.domain.member.repository.MemberRepository;
+import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.model.MemberStockSnapshot;
+import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.repository.MemberStockSnapshotRepository;
 import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
 import com.shinhan.pda_midterm_project.domain.stock.repository.StockRepository;
 import com.shinhan.pda_midterm_project.domain.summary.model.Summary;
@@ -30,6 +34,9 @@ public class SummaryService {
 
     private final InvestmentTypeRepository investmentTypeRepository;
     private final InvestmentTypeNewsCommentRepository commentRepository;
+    private final MemberRepository memberRepository;
+    private final MemberStockSnapshotRepository memberStockSnapshotRepository;
+
 
     private OpenAIClient client;
 
@@ -46,29 +53,51 @@ public class SummaryService {
     public Summary summarizeAndSave(String content, Stock stock) {
         String summaryText = summarize(content);
 
-        Summary summary = Summary.builder()
-                .stock(stock)
-                .newsContent(summaryText)
-                .build();
+        // 1. Summary 저장
+        Summary summary = summaryRepository.save(
+                Summary.builder()
+                        .stock(stock)
+                        .newsContent(summaryText)
+                        .build()
+        );
 
-        summaryRepository.save(summary);
+        // 2. 투자 성향별 첨언 저장
+        List<InvestmentTypeNewsComment> savedComments = investmentTypeRepository.findAll().stream()
+                .map(type -> {
+                    String comment = generateCommentary(summaryText, type.getInvestmentName());
+                    InvestmentTypeNewsComment commentEntity = InvestmentTypeNewsComment.builder()
+                            .summary(summary)
+                            .investmentType(type)
+                            .investmentTypeNewsContent(comment)
+                            .build();
+                    return commentRepository.save(commentEntity);
+                })
+                .toList();
 
-        List<InvestmentType> types = investmentTypeRepository.findAll();
-        for (InvestmentType type : types) {
-            String comment = generateCommentary(summaryText, type.getInvestmentName());
+        // 3. 종목을 보유한 멤버 조회
+        List<Member> holdingMembers = memberRepository.findAllByStockId(stock.getStockId());
 
-            InvestmentTypeNewsComment commentEntity = InvestmentTypeNewsComment.builder()
-                    .summary(summary)
-                    .investmentType(type)
-                    .investmentTypeNewsContent(comment)
+        for (Member member : holdingMembers) {
+            InvestmentType memberType = member.getInvestmentType();
+
+            // 4. 해당 성향의 comment 찾기
+            InvestmentTypeNewsComment matchedComment = savedComments.stream()
+                    .filter(c -> c.getInvestmentType().equals(memberType))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("투자 성향에 맞는 첨언이 없습니다."));
+
+            // 5. MemberStockSnapshot 저장
+            MemberStockSnapshot snapshot = MemberStockSnapshot.builder()
+                    .member(member)
+                    .investmentTypeNewsComment(matchedComment)
                     .build();
 
-            commentRepository.save(commentEntity);
+            memberStockSnapshotRepository.save(snapshot);
         }
-
 
         return summary;
     }
+
 
     /**
      * 여러개의 미국 영어 기사들을 가지고 전체적인 요약
