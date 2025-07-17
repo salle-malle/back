@@ -22,9 +22,7 @@ public class NewsScheduler {
         this.newsCrawlingJob = newsCrawlingJob;
     }
 
-    // 매일 오전 7시에 실행 (cron = "0 0 7 * * *")
-    // 테스트를 위해 1분마다 실행하려면 "0 */1 * * * ?"
-//    @Scheduled(cron = "0 */5 * * * ?")
+    @Scheduled(cron = "0 0 7 * * *")
     public void runNewsCrawlingJob() {
         log.info("뉴스 크롤링 배치 작업을 시작합니다.");
 
