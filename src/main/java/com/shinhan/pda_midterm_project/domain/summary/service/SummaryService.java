@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SummaryService {
@@ -85,17 +87,28 @@ public class SummaryService {
         List<Member> holdingMembers = memberRepository.findAllByStockId(stock.getStockId());
 
         for (Member member : holdingMembers) {
-            InvestmentType memberType = member.getInvestmentType();
-            if (memberType == null) {
+            Long memberTypeId = member.getInvestmentType().getId();
+            log.info("memberId: {}, 투자성향 ID: {}", member.getId(), memberTypeId);
+//            InvestmentType memberType = member.getInvestmentType();
+            if (memberTypeId == null) {
                 continue;
             }
-
-            // 4. 해당 성향의 comment 찾기
             InvestmentTypeNewsComment matchedComment = savedComments.stream()
-                    .filter(c -> c.getInvestmentType().equals(memberType))
+                    .filter(c -> c.getInvestmentType().getId().equals(memberTypeId))
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("투자 성향에 맞는 첨언이 없습니다."));
 
+//
+//
+//
+//            log.info("memberId: {}, 투자성향: {}, (id: {})",member.getId(), memberType.getInvestmentName(), memberType.getId());
+//
+//            // 4. 해당 성향의 comment 찾기
+//            InvestmentTypeNewsComment matchedComment = savedComments.stream()
+//                    .filter(c -> c.getInvestmentType().equals(memberType))
+//                    .findFirst()
+//                    .orElseThrow(() -> new IllegalStateException("투자 성향에 맞는 첨언이 없습니다."));
+//
             // 5. MemberStockSnapshot 저장
             MemberStockSnapshot snapshot = MemberStockSnapshot.builder()
                     .member(member)
