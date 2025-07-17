@@ -1,10 +1,10 @@
 package com.shinhan.pda_midterm_project.domain.auth.service;
 
-import com.shinhan.pda_midterm_project.domain.auth.model.UserTokens;
+import org.springframework.http.ResponseCookie;
 
 public interface AuthService {
-    UserTokens login(String id, String password);
+    ResponseCookie login(String id, String password);
 
-    UserTokens signUp(String id, String password, String phoneNumber, String appKey, String appSecret,
-            String accountNumber);
+    ResponseCookie signUp(String id, String password, String phoneNumber, String appKey, String appSecret,
+                          String accountNumber);
 }

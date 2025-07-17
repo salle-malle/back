@@ -1,5 +1,6 @@
 package com.shinhan.pda_midterm_project.common.resolver;
 
+import com.shinhan.pda_midterm_project.common.annotation.Auth;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.exception.AuthException;
 import com.shinhan.pda_midterm_project.domain.auth.exception.TokenException;
@@ -20,11 +21,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class AuthenticationResolver implements HandlerMethodArgumentResolver {
 
     private final TokenProvider tokenProvider;
-    private final TokenCookieManager tokenCookieManager;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return false;
+        return parameter.hasParameterAnnotation(Auth.class);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AuthenticationResolver implements HandlerMethodArgumentResolver {
         }
 
         try {
-            String accessTokenValue = tokenCookieManager.extractToken(request.getCookies());
+            String accessTokenValue = TokenCookieManager.extractToken(request.getCookies());
             tokenProvider.verify(accessTokenValue);
 
             Long memberId = Long.valueOf(tokenProvider.getSubject(accessTokenValue));
