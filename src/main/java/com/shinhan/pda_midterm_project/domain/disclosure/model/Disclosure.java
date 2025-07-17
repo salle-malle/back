@@ -29,12 +29,8 @@ public class Disclosure extends BaseEntity {
     @Column(length = 255)
     private LocalDate disclosureDate;
 
-    @Enumerated(value = EnumType.STRING)
-    private EventType eventType;
-
     public static Disclosure create(Stock stock, String disclosureTitle, LocalDate disclosureDate,
-                                    String disclosureSummary,
-                                    EventType eventType) {
+                                    String disclosureSummary) {
         return Disclosure.builder()
                 .stock(stock)
                 .disclosureTitle(disclosureTitle)
