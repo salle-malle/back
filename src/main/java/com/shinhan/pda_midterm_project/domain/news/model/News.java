@@ -1,6 +1,7 @@
 package com.shinhan.pda_midterm_project.domain.news.model;
 
 import com.shinhan.pda_midterm_project.common.util.BaseEntity;
+import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,9 +15,19 @@ public class News extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(length = 255)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "stock_id")
+  private Stock stock;
+
+  @Column(columnDefinition = "TEXT")
   private String newsTitle;
 
   @Column(columnDefinition = "TEXT")
   private String newsContent;
+
+  @Column(columnDefinition = "TEXT")
+  private String newsUri;
+
+  @Column(columnDefinition = "TEXT")
+  private String newsDate;
 }

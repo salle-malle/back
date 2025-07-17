@@ -19,40 +19,39 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+	private final AuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<Response<Object>> login(
-            @Valid @RequestBody AuthRequest.Login loginRequest
-    ) {
-        String id = loginRequest.id();
-        String password = loginRequest.password();
-        UserTokens loginResult = authService.login(id, password);
+	@PostMapping("/login")
+	public ResponseEntity<Response<Object>> login(
+			@Valid @RequestBody AuthRequest.Login loginRequest) {
+		String id = loginRequest.id();
+		String password = loginRequest.password();
+		UserTokens loginResult = authService.login(id, password);
 
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.SET_COOKIE, loginResult.accessToken().toString())
-                .body(Response.success(
-                        ResponseMessages.LOGIN_SUCCESS.getCode(),
-                        ResponseMessages.LOGIN_SUCCESS.getMessage()
-                ));
-    }
+		return ResponseEntity
+				.ok()
+				.header(HttpHeaders.SET_COOKIE, loginResult.accessToken().toString())
+				.body(Response.success(
+						ResponseMessages.LOGIN_SUCCESS.getCode(),
+						ResponseMessages.LOGIN_SUCCESS.getMessage()));
+	}
 
-    @PostMapping("/signup")
-    public ResponseEntity<Response<Object>> signUp(
-            @Valid @RequestBody AuthRequest.SignUp signUpRequest
-    ) {
-        String id = signUpRequest.id();
-        String password = signUpRequest.password();
-        String phoneNumber = signUpRequest.phoneNumber();
-        UserTokens userTokens = authService.signUp(id, password, phoneNumber);
+	@PostMapping("/signup")
+	public ResponseEntity<Response<Object>> signUp(
+			@Valid @RequestBody AuthRequest.SignUp signUpRequest) {
+		String id = signUpRequest.id();
+		String password = signUpRequest.password();
+		String phoneNumber = signUpRequest.phoneNumber();
+		String appKey = signUpRequest.appKey();
+		String appSecret = signUpRequest.appSecret();
+		String accountNumber = signUpRequest.accountNumber();
+		UserTokens userTokens = authService.signUp(id, password, phoneNumber, appKey, appSecret, accountNumber);
 
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.SET_COOKIE, userTokens.accessToken().toString())
-                .body(Response.success(
-                        ResponseMessages.SIGNUP_SUCCESS.getCode(),
-                        ResponseMessages.SIGNUP_SUCCESS.getMessage()
-                ));
-    }
+		return ResponseEntity
+				.ok()
+				.header(HttpHeaders.SET_COOKIE, userTokens.accessToken().toString())
+				.body(Response.success(
+						ResponseMessages.SIGNUP_SUCCESS.getCode(),
+						ResponseMessages.SIGNUP_SUCCESS.getMessage()));
+	}
 }

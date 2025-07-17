@@ -3,6 +3,7 @@ package com.shinhan.pda_midterm_project.common.config;
 import com.shinhan.pda_midterm_project.common.resolver.AuthenticationResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
