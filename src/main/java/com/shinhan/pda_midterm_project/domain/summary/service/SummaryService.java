@@ -13,11 +13,17 @@ import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.repository.MemberRepository;
 import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.model.MemberStockSnapshot;
 import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.repository.MemberStockSnapshotRepository;
+import com.shinhan.pda_midterm_project.domain.news.model.News;
+import com.shinhan.pda_midterm_project.domain.news.repository.NewsRepository;
 import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
 import com.shinhan.pda_midterm_project.domain.stock.repository.StockRepository;
 import com.shinhan.pda_midterm_project.domain.summary.model.Summary;
 import com.shinhan.pda_midterm_project.domain.summary.repository.SummaryRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,6 +42,7 @@ public class SummaryService {
     private final InvestmentTypeNewsCommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final MemberStockSnapshotRepository memberStockSnapshotRepository;
+    private final NewsRepository newsRepository;
 
 
     private OpenAIClient client;
@@ -50,7 +57,7 @@ public class SummaryService {
     }
 
     @Transactional
-    public Summary summarizeAndSave(String content, Stock stock) {
+    protected Summary summarizeAndSave(String content, Stock stock) {
         String summaryText = summarize(content);
 
         // 1. Summary 저장
@@ -79,6 +86,9 @@ public class SummaryService {
 
         for (Member member : holdingMembers) {
             InvestmentType memberType = member.getInvestmentType();
+            if (memberType == null) {
+                continue;
+            }
 
             // 4. 해당 성향의 comment 찾기
             InvestmentTypeNewsComment matchedComment = savedComments.stream()
@@ -158,5 +168,31 @@ public class SummaryService {
                 + "- 핵심 내용만 간단히 요약해서 한 문단으로 정리하고, 너무 자세히 나열하지 마.\n"
                 + "- 이 사용자는 " + description + "를 지향하는 투자자야. 도움이 되는 관점을 포함해 작성해줘.\n"
                 + "- 한국어로 작성해. 문장을 자연스럽게 마무리해. 서술형으로 존댓말로 투자 비서처럼 작성해줘. 500자 이내로 작성해줘";
+    }
+
+
+    public void generateSummaryForTodayNews() {
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        List<News> todayNews = newsRepository.findAllByCreatedAtBetween(startOfDay, endOfDay);
+
+        // 종목별로 뉴스 그룹핑
+        Map<Stock, List<News>> newsByStock = todayNews.stream()
+                .filter(n -> n.getStock() != null)
+                .collect(Collectors.groupingBy(News::getStock));
+
+        for (Map.Entry<Stock, List<News>> entry : newsByStock.entrySet()) {
+            Stock stock = entry.getKey();
+            List<News> newsList = entry.getValue();
+
+            // 뉴스 내용 합치기
+            String combinedContent = newsList.stream()
+                    .map(News::getNewsContent)
+                    .collect(Collectors.joining("\n\n"));
+
+            // 요약 및 저장
+            summarizeAndSave(combinedContent, stock);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.shinhan.pda_midterm_project.domain.news.service;
 
+import com.shinhan.pda_midterm_project.domain.summary.service.SummaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -12,15 +13,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class NewsScheduler {
     private final JobLauncher jobLauncher;
     private final Job newsCrawlingJob;
-
-    public NewsScheduler(JobLauncher jobLauncher, Job newsCrawlingJob) {
-        this.jobLauncher = jobLauncher;
-        this.newsCrawlingJob = newsCrawlingJob;
-    }
+    private final SummaryService summaryService;
 
     // 매일 오전 7시에 실행 (cron = "0 0 7 * * *")
     // 테스트를 위해 1분마다 실행하려면 "0 */1 * * * ?"
@@ -34,6 +31,9 @@ public class NewsScheduler {
                     .toJobParameters();
             jobLauncher.run(newsCrawlingJob, params);
             log.info("뉴스 크롤링 배치 작업을 성공적으로 실행 완료했습니다.");
+
+            summaryService.generateSummaryForTodayNews();
+            log.info(">>> [Summary] 오늘 뉴스에 대한 요약도 성공적으로 생성 완료했습니다.");
         } catch (Exception e) {
             log.error("뉴스 크롤링 배치 작업 실행 중 오류 발생", e);
         }
