@@ -21,4 +21,17 @@ public class ScrapGroup extends BaseEntity {
 
   @Column(length = 255)
   private String scrapGroupName;
+
+  public static ScrapGroup create(Member member, String scrapGroupName){
+    return ScrapGroup.builder()
+            .member(member)
+            .scrapGroupName(scrapGroupName)
+            .build();
+  }
+
+  public void updateName(String newName) {
+    this.scrapGroupName = newName;
+  }
 }
+
+

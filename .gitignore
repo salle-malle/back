@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+**/application.yml
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -26,6 +27,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -35,3 +37,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Database Files ###
+*.db
+*.mv.db
+*.trace.db
+data/*.db
+data/*.mv.db
+data/*.trace.db

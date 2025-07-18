@@ -1,5 +1,6 @@
 package com.shinhan.pda_midterm_project.domain.member.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.shinhan.pda_midterm_project.common.util.BaseEntity;
 import com.shinhan.pda_midterm_project.domain.investment_type.model.InvestmentType;
 import jakarta.persistence.Column;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Member extends BaseEntity {
 
     @Id
@@ -31,7 +33,7 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "investment_type_id")
     private InvestmentType investmentType;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 255, unique = true)
     private String memberId;
 
     @Column(columnDefinition = "TEXT")
@@ -61,17 +63,30 @@ public class Member extends BaseEntity {
     @Column
     private Boolean memberIsRead;
 
+    @Column(columnDefinition = "TEXT")
+    private String kisAccessToken;
+
     public void updateProfile(String memberNickname, String memberPhone) {
         this.memberNickname = memberNickname;
         this.memberPhone = memberPhone;
     }
 
+    public void updateKisAccessToken(String kisAccessToken) {
+        this.kisAccessToken = kisAccessToken;
+    }
+
+    public void setKisInfo(String memberAppKey, String memberAppSecret, String memberAccountNumber) {
+        this.memberAppKey = memberAppKey;
+        this.memberAppSecret = memberAppSecret;
+        this.memberAccountNumber = memberAccountNumber;
+    }
+
     // TODO: 나중에 erd 확정 후 추가 : 기본적인 예시용
-    public static Member create(String memberId, String memberPassword, String memberNickname, String memberPhone) {
+    public static Member create(String memberId, String memberPassword, String memberPhone) {
+
         return Member.builder()
                 .memberId(memberId)
                 .memberPassword(memberPassword)
-                .memberNickname(memberNickname)
                 .memberPhone(memberPhone)
                 .build();
     }

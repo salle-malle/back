@@ -17,12 +17,14 @@ public class Source extends BaseEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "summary_id")
-  private Summary summary;
-
-  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "stock_id")
   private Stock stock;
+
+  @Column(columnDefinition = "TEXT")
+  private String newsTitle;
+
+  @Column(columnDefinition = "TEXT")
+  private String newsContent;
 
   @Column(columnDefinition = "TEXT")
   private String sourceUri;
