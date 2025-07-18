@@ -2,8 +2,6 @@ package com.shinhan.pda_midterm_project.domain.auth.service;
 
 import com.shinhan.pda_midterm_project.common.config.JwtProperties;
 import com.shinhan.pda_midterm_project.common.util.TimeUtil;
-import com.shinhan.pda_midterm_project.domain.auth.model.AccessToken;
-import com.shinhan.pda_midterm_project.domain.auth.model.UserTokens;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -21,9 +19,8 @@ public class TokenProvider {
     private final Clock clock;
     private final SecretKey secretKey;
 
-    public UserTokens generateTokens(String subject) {
-        String accessToken = createToken(subject, jwtProperties.getAccessExpireMs());
-        return UserTokens.of(AccessToken.of(accessToken));
+    public String generateTokens(String subject) {
+        return createToken(subject, jwtProperties.getAccessExpireMs());
     }
 
     public String createToken(String subject, Long expireMs) {

@@ -6,14 +6,12 @@ import jakarta.servlet.http.Cookie;
 import java.time.Duration;
 import java.util.Arrays;
 import org.springframework.http.ResponseCookie;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TokenCookieManager {
     private static final String TOKEN_NAME = "access-token";
     private static final Duration COOKIE_MAX_AGE = Duration.ofDays(14L);
 
-    public String extractToken(Cookie[] cookies) {
+    public static String extractToken(Cookie[] cookies) {
         return Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(TOKEN_NAME))
                 .findFirst()
@@ -21,7 +19,7 @@ public class TokenCookieManager {
                 .getValue();
     }
 
-    public ResponseCookie createCookie(String tokenValue) {
+    public static ResponseCookie createCookie(String tokenValue) {
         return ResponseCookie.from(TOKEN_NAME, tokenValue)
                 .maxAge(COOKIE_MAX_AGE)
                 .secure(true)
