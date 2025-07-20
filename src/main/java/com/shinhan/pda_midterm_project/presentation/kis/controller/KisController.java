@@ -1,7 +1,10 @@
 package com.shinhan.pda_midterm_project.presentation.kis.controller;
 
+import com.shinhan.pda_midterm_project.common.annotation.Auth;
+import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.auth.service.KoreaInvestmentService;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
@@ -54,12 +57,13 @@ public class KisController {
   /**
    * 해외주식 현재가 상세 조회
    */
-  @PostMapping("/stock-detail/{memberId}")
+  @PostMapping("/stock-detail")
+  @MemberOnly
   public ResponseEntity<Response<KisStockDetailResponse>> getStockDetail(
-      @PathVariable Long memberId,
+      @Auth Accessor accessor,
       @RequestBody KisStockDetailRequest request) {
     try {
-      Member member = memberService.findById(memberId);
+      Member member = memberService.findById(accessor.memberId());
       String accessToken = member.getKisAccessToken();
 
       if (accessToken == null || accessToken.isEmpty()) {
@@ -96,12 +100,13 @@ public class KisController {
   /**
    * 해외주식 잔고 조회
    */
-  @PostMapping("/balance/{memberId}")
+  @PostMapping("/balance")
+  @MemberOnly
   public ResponseEntity<Response<KisBalanceResponse>> getBalance(
-      @PathVariable Long memberId,
+      @Auth Accessor accessor,
       @RequestBody KisBalanceRequest request) {
     try {
-      Member member = memberService.findById(memberId);
+      Member member = memberService.findById(accessor.memberId());
       String accessToken = member.getKisAccessToken();
 
       if (accessToken == null || accessToken.isEmpty()) {
@@ -141,12 +146,13 @@ public class KisController {
   /**
    * 해외주식 소수점 잔고 조회
    */
-  @PostMapping("/present-balance/{memberId}")
+  @PostMapping("/present-balance")
+  @MemberOnly
   public ResponseEntity<Response<KisPresentBalanceResponse>> getPresentBalance(
-      @PathVariable Long memberId,
+      @Auth Accessor accessor,
       @RequestBody KisPresentBalanceRequest request) {
     try {
-      Member member = memberService.findById(memberId);
+      Member member = memberService.findById(accessor.memberId());
       String accessToken = member.getKisAccessToken();
 
       if (accessToken == null || accessToken.isEmpty()) {
@@ -192,10 +198,11 @@ public class KisController {
   /**
    * 회원 주식 목록 조회
    */
-  @GetMapping("/member-stocks/{memberId}")
-  public ResponseEntity<Response<List<MemberStockResponseDto>>> getMemberStocks(@PathVariable Long memberId) {
+  @GetMapping("/member-stocks")
+  @MemberOnly
+  public ResponseEntity<Response<List<MemberStockResponseDto>>> getMemberStocks(@Auth Accessor accessor) {
     try {
-      Member member = memberService.findById(memberId);
+      Member member = memberService.findById(accessor.memberId());
       var memberStocks = memberStockService.getMemberStocks(member);
 
       List<MemberStockResponseDto> responseDtos = memberStocks.stream()
@@ -216,10 +223,11 @@ public class KisController {
   /**
    * 회원 주식 정보 갱신 (KIS API에서 최신 데이터 가져오기)
    */
-  @PostMapping("/refresh-member-stocks/{memberId}")
-  public ResponseEntity<Response<String>> refreshMemberStocks(@PathVariable Long memberId) {
+  @PostMapping("/refresh-member-stocks")
+  @MemberOnly
+  public ResponseEntity<Response<String>> refreshMemberStocks(@Auth Accessor accessor) {
     try {
-      Member member = memberService.findById(memberId);
+      Member member = memberService.findById(accessor.memberId());
 
       // 1. 주식 잔고 조회 및 저장
       memberService.fetchAndSaveMemberStocks(member);
@@ -240,12 +248,13 @@ public class KisController {
   /**
    * 특정 주식 상세 정보 업데이트
    */
-  @PostMapping("/update-stock-detail/{memberId}/{stockId}")
+  @PostMapping("/update-stock-detail/{stockId}")
+  @MemberOnly
   public ResponseEntity<Response<String>> updateStockDetail(
-      @PathVariable Long memberId,
+      @Auth Accessor accessor,
       @PathVariable String stockId) {
     try {
-      Member member = memberService.findById(memberId);
+      Member member = memberService.findById(accessor.memberId());
       String accessToken = member.getKisAccessToken();
 
       if (accessToken == null || accessToken.isEmpty()) {
@@ -269,10 +278,11 @@ public class KisController {
   /**
    * 통합 주식 잔고 조회 (일반주식 + 소수점주식)
    */
-  @GetMapping("/unified-stocks/{memberId}")
-  public ResponseEntity<Response<UnifiedStockResponse>> getUnifiedStocks(@PathVariable Long memberId) {
+  @GetMapping("/unified-stocks")
+  @MemberOnly
+  public ResponseEntity<Response<UnifiedStockResponse>> getUnifiedStocks(@Auth Accessor accessor) {
     try {
-      Member member = memberService.findById(memberId);
+      Member member = memberService.findById(accessor.memberId());
       String accessToken = member.getKisAccessToken();
 
       if (accessToken == null || accessToken.isEmpty()) {
