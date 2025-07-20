@@ -220,7 +220,12 @@ public class KisController {
   public ResponseEntity<Response<String>> refreshMemberStocks(@PathVariable Long memberId) {
     try {
       Member member = memberService.findById(memberId);
+
+      // 1. 주식 잔고 조회 및 저장
       memberService.fetchAndSaveMemberStocks(member);
+
+      // 2. 모든 주식의 상세정보 갱신
+      memberStockService.refreshAllMemberStockDetails(member);
 
       return ResponseEntity.ok(Response.success(
           ResponseMessages.SUCCESS.getCode(),
