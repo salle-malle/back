@@ -67,6 +67,11 @@ public enum ResponseMessages {
     STOCK_ALREADY_EXISTS("STOCK-006", "이미 존재하는 주식 정보입니다."),
 
     /**
+     * disclosure
+     */
+    GET_MY_CURRENT_DISCLOSURE_SUCCESS("DISCLOSURE-001", "나의 최근 공시정보를 성공적으로 조회했습니다."),
+
+    /**
      * common
      */
     SUCCESS("SUCCESS-001", "요청이 성공적으로 처리되었습니다."),

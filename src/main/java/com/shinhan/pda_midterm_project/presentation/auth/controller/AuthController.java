@@ -67,5 +67,4 @@ public class AuthController {
 		}
 		return ResponseEntity.ok(Response.success("200", "인증된 사용자입니다."));
 	}
-
 }
