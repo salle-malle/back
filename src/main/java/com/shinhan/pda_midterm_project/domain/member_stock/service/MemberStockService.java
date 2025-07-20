@@ -12,6 +12,11 @@ public interface MemberStockService {
   void updateStockDetailFromKis(String stockId, String accessToken, Member member);
 
   /**
+   * 회원이 보유한 모든 주식의 상세정보를 갱신
+   */
+  void refreshAllMemberStockDetails(Member member);
+
+  /**
    * 회원의 보유 주식 목록 조회
    */
   List<MemberStock> getMemberStocks(Member member);

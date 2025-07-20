@@ -71,8 +71,6 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
           .queryParam("SYMB", request.getSYMB());
 
       String url = builder.toUriString();
-      System.out.println("Requesting URL: " + url);
-      System.out.println("Headers: " + headers);
 
       HttpEntity<String> httpRequest = new HttpEntity<>(headers);
 
@@ -109,41 +107,11 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
           request.getCTX_AREA_NK200() != null ? request.getCTX_AREA_NK200() : "");
 
       String url = builder.toUriString();
-      // System.out.println("Requesting Balance URL: " + url);
-      // System.out.println("Headers: " + headers);
 
       HttpEntity<String> httpRequest = new HttpEntity<>(headers);
 
       KisBalanceResponse response = restTemplate
           .exchange(url, HttpMethod.GET, httpRequest, KisBalanceResponse.class).getBody();
-
-      // 응답 로깅 (데이터가 있을 때만 출력)
-      if (response != null && response.getOutput1() != null && !response.getOutput1().isEmpty()) {
-        System.out.println("Balance Response: " + response);
-        System.out.println("Number of balance items: " + response.getOutput1().size());
-        for (KisBalanceResponse.KisBalanceItem item : response.getOutput1()) {
-          System.out.println("Stock: " + item.getOvrsItemName() + " (" + item.getOvrsPdno() + ")");
-          System.out.println("  Exchange: " + item.getOvrsExcgCd());
-          System.out.println("  Currency: " + item.getTrCrcyCd());
-          System.out.println("  Quantity: " + item.getOvrsCblcQty());
-          System.out.println("  Avg Price: " + item.getPchsAvgPric());
-          System.out.println("  Purchase Amount: " + item.getFrcrPchsAmt1());
-          System.out.println("  Current Price: " + item.getNowPric2());
-          System.out.println("  Evaluation Amount: " + item.getOvrsStckEvluAmt());
-          System.out.println("  Profit/Loss Amount: " + item.getFrcrEvluPflsAmt());
-          System.out.println("  Profit/Loss Rate: " + item.getEvluPflsRt());
-        }
-
-        if (response.getOutput2() != null) {
-          System.out.println("Summary:");
-          System.out.println("  Total Purchase Amount: " + response.getOutput2().getFrcrPchsAmt1());
-          System.out.println("  Total Evaluation Amount: " + response.getOutput2().getTotEvluPflsAmt());
-          System.out.println("  Total Profit/Loss: " + response.getOutput2().getOvrsTotPfls());
-          System.out.println("  Total Profit/Loss Rate: " + response.getOutput2().getTotPftrt());
-        }
-      } else {
-        System.out.println("Balance Response: No data found for exchange");
-      }
 
       return response;
     } catch (Exception e) {
@@ -174,41 +142,11 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
           .queryParam("INQR_DVSN_CD", request.getINQR_DVSN_CD());
 
       String url = builder.toUriString();
-      System.out.println("Requesting Present Balance URL: " + url);
-      System.out.println("Headers: " + headers);
 
       HttpEntity<String> httpRequest = new HttpEntity<>(headers);
 
       KisPresentBalanceResponse response = restTemplate
           .exchange(url, HttpMethod.GET, httpRequest, KisPresentBalanceResponse.class).getBody();
-
-      // 응답 로깅 (데이터가 있을 때만 출력)
-      if (response != null && response.getOutput1() != null && !response.getOutput1().isEmpty()) {
-        System.out.println("Present Balance Response: " + response);
-        System.out.println("Number of present balance items: " + response.getOutput1().size());
-        for (KisPresentBalanceResponse.KisPresentBalanceItem item : response.getOutput1()) {
-          System.out.println("Stock: " + item.getPrdtName() + " (" + item.getPdno() + ")");
-          System.out.println("  Exchange: " + item.getOvrsExcgCd());
-          System.out.println("  Currency: " + item.getBuyCrcyCd());
-          System.out.println("  Quantity: " + item.getCblcQty13());
-          System.out.println("  Avg Price: " + item.getAvgUnpr3());
-          System.out.println("  Purchase Amount: " + item.getFrcrPchsAmt());
-          System.out.println("  Current Price: " + item.getOvrsNowPric1());
-          System.out.println("  Evaluation Amount: " + item.getFrcrEvluAmt2());
-          System.out.println("  Profit/Loss Amount: " + item.getEvluPflsAmt2());
-          System.out.println("  Profit/Loss Rate: " + item.getEvluPflsRt1());
-        }
-
-        if (response.getOutput3() != null) {
-          System.out.println("Summary:");
-          System.out.println("  Total Purchase Amount: " + response.getOutput3().getPchsAmtSmtl());
-          System.out.println("  Total Evaluation Amount: " + response.getOutput3().getEvluAmtSmtl());
-          System.out.println("  Total Profit/Loss: " + response.getOutput3().getTotEvluPflsAmt());
-          System.out.println("  Total Assets: " + response.getOutput3().getTotAsstAmt());
-        }
-      } else {
-        System.out.println("Present Balance Response: No data found for exchange");
-      }
 
       return response;
     } catch (Exception e) {
