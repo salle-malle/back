@@ -7,11 +7,14 @@ import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import com.shinhan.pda_midterm_project.domain.member_stock.service.MemberStockService;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.request.KisBalanceRequest;
+import com.shinhan.pda_midterm_project.presentation.kis.dto.request.KisPresentBalanceRequest;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.request.KisStockDetailRequest;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.response.KisBalanceResponse;
+import com.shinhan.pda_midterm_project.presentation.kis.dto.response.KisPresentBalanceResponse;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.response.KisStockDetailResponse;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.response.KisTokenResponse;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.response.MemberStockResponseDto;
+import com.shinhan.pda_midterm_project.presentation.kis.dto.response.UnifiedStockResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -136,6 +139,57 @@ public class KisController {
   }
 
   /**
+   * 해외주식 소수점 잔고 조회
+   */
+  @PostMapping("/present-balance/{memberId}")
+  public ResponseEntity<Response<KisPresentBalanceResponse>> getPresentBalance(
+      @PathVariable Long memberId,
+      @RequestBody KisPresentBalanceRequest request) {
+    try {
+      Member member = memberService.findById(memberId);
+      String accessToken = member.getKisAccessToken();
+
+      if (accessToken == null || accessToken.isEmpty()) {
+        return ResponseEntity.badRequest().body(Response.failure(
+            ResponseMessages.API_ERROR.getCode(),
+            "액세스 토큰이 없습니다. 회원가입을 먼저 진행해주세요."));
+      }
+
+      // 기본값 설정
+      if (request.getCANO() == null) {
+        request.setCANO(member.getMemberAccountNumber());
+      }
+      if (request.getACNT_PRDT_CD() == null) {
+        request.setACNT_PRDT_CD("01"); // 계좌상품코드
+      }
+      if (request.getWCRC_FRCR_DVSN_CD() == null) {
+        request.setWCRC_FRCR_DVSN_CD("02"); // 외화잔고구분코드
+      }
+      if (request.getNATN_CD() == null) {
+        request.setNATN_CD("000"); // 국가코드
+      }
+      if (request.getTR_MKET_CD() == null) {
+        request.setTR_MKET_CD("00"); // 거래시장코드
+      }
+      if (request.getINQR_DVSN_CD() == null) {
+        request.setINQR_DVSN_CD("00"); // 조회구분코드
+      }
+
+      KisPresentBalanceResponse response = koreaInvestmentService.getPresentBalance(
+          request, accessToken, member.getMemberAppKey(), member.getMemberAppSecret());
+
+      return ResponseEntity.ok(Response.success(
+          ResponseMessages.SUCCESS.getCode(),
+          ResponseMessages.SUCCESS.getMessage(),
+          response));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(Response.failure(
+          ResponseMessages.API_ERROR.getCode(),
+          "소수점 잔고 조회 실패: " + e.getMessage()));
+    }
+  }
+
+  /**
    * 회원 주식 목록 조회
    */
   @GetMapping("/member-stocks/{memberId}")
@@ -204,6 +258,38 @@ public class KisController {
       return ResponseEntity.badRequest().body(Response.failure(
           ResponseMessages.API_ERROR.getCode(),
           "주식 상세 정보 업데이트 실패: " + e.getMessage()));
+    }
+  }
+
+  /**
+   * 통합 주식 잔고 조회 (일반주식 + 소수점주식)
+   */
+  @GetMapping("/unified-stocks/{memberId}")
+  public ResponseEntity<Response<UnifiedStockResponse>> getUnifiedStocks(@PathVariable Long memberId) {
+    try {
+      Member member = memberService.findById(memberId);
+      String accessToken = member.getKisAccessToken();
+
+      if (accessToken == null || accessToken.isEmpty()) {
+        return ResponseEntity.badRequest().body(Response.failure(
+            ResponseMessages.API_ERROR.getCode(),
+            "액세스 토큰이 없습니다. 회원가입을 먼저 진행해주세요."));
+      }
+
+      UnifiedStockResponse response = koreaInvestmentService.getUnifiedStocks(
+          member.getMemberAccountNumber(),
+          accessToken,
+          member.getMemberAppKey(),
+          member.getMemberAppSecret());
+
+      return ResponseEntity.ok(Response.success(
+          ResponseMessages.SUCCESS.getCode(),
+          ResponseMessages.SUCCESS.getMessage(),
+          response));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(Response.failure(
+          ResponseMessages.API_ERROR.getCode(),
+          "통합 주식 조회 실패: " + e.getMessage()));
     }
   }
 }
