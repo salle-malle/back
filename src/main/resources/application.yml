@@ -52,3 +52,6 @@ server:
 
 data-server:
   url: http://localhost:8000
+
+openai:
+  api-key: ${OPENAI_API_KEY}
