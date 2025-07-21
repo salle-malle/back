@@ -250,4 +250,10 @@ public class MemberServiceImpl implements MemberService {
             }
         }
     }
+
+    @Transactional
+    public void updateNickname(Long memberId, String newNickname) {
+        Member member = findById(memberId);
+        member.updateProfile(newNickname, member.getMemberPhone());
+    }
 }
