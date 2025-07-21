@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor // JSON 역직렬화를 위해 기본 생성자 추가
+@NoArgsConstructor
 public class ScrapGroupedDeleteRequestDto {
-    private Long scrapGroupId;
-    private Long scrapGroupedId;
+    private Long scrapGroupedId; // scrapGroupId 필드 제거
 }

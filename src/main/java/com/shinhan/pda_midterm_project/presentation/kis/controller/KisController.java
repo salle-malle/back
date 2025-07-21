@@ -62,6 +62,7 @@ public class KisController {
   public ResponseEntity<Response<KisStockDetailResponse>> getStockDetail(
       @Auth Accessor accessor,
       @RequestBody KisStockDetailRequest request) {
+    Long memberId = accessor.memberId();
     try {
       Member member = memberService.findById(accessor.memberId());
       String accessToken = member.getKisAccessToken();
