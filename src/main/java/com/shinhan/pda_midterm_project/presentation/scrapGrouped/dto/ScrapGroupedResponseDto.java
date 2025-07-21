@@ -1,18 +1,14 @@
-// presentation/scrapGroup/dto/ScrapGroupResponseDto.java 경로에 파일 생성
 package com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto;
 
-import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.model.MemberStockSnapshot;
-import com.shinhan.pda_midterm_project.domain.scrap_group.model.ScrapGroup;
 import com.shinhan.pda_midterm_project.domain.scrap_grouped.model.ScrapGrouped;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-
 @Getter
 public class ScrapGroupedResponseDto {
-
-    private final Long scrapGroupedId;
+    private final Long id;
+    private final Long scrapId;
     private final Long scrapGroupId;
     private final String scrapGroupName;
     private final Long memberStockSnapshotId;
@@ -20,11 +16,13 @@ public class ScrapGroupedResponseDto {
     private final LocalDateTime createdAt;
 
     public ScrapGroupedResponseDto(ScrapGrouped scrapGrouped) {
-        this.scrapGroupedId = scrapGrouped.getScrapGroupedId();
+        this.id = scrapGrouped.getId();
+        this.scrapId = scrapGrouped.getScrap().getId(); // scrapId 추가
         this.scrapGroupId = scrapGrouped.getScrapGroup().getId();
         this.scrapGroupName = scrapGrouped.getScrapGroup().getScrapGroupName();
-        this.memberStockSnapshotId = scrapGrouped.getMemberStockSnapshot().getId();
-        this.stockName = scrapGrouped.getMemberStockSnapshot().getInvestmentTypeNewsComment().getSummary().getStock().getStockName();
+        // scrap을 한 번 더 거쳐서 스냅샷 정보에 접근
+        this.memberStockSnapshotId = scrapGrouped.getScrap().getMemberStockSnapshot().getId();
+        this.stockName = scrapGrouped.getScrap().getMemberStockSnapshot().getInvestmentTypeNewsComment().getSummary().getStock().getStockName();
         this.createdAt = scrapGrouped.getCreatedAt();
     }
 }

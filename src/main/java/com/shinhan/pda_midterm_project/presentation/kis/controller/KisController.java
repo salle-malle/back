@@ -1,7 +1,10 @@
 package com.shinhan.pda_midterm_project.presentation.kis.controller;
 
+import com.shinhan.pda_midterm_project.common.annotation.Auth;
+import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.auth.service.KoreaInvestmentService;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
@@ -51,10 +54,11 @@ public class KisController {
   /**
    * 해외주식 현재가 상세 조회
    */
-  @PostMapping("/stock-detail/{memberId}")
-  public ResponseEntity<Response<KisStockDetailResponse>> getStockDetail(
-      @PathVariable Long memberId,
+  @PostMapping("/stock-detail")
+  @MemberOnly
+  public ResponseEntity<Response<KisStockDetailResponse>> getStockDetail(@Auth Accessor accessor,
       @RequestBody KisStockDetailRequest request) {
+    Long memberId = accessor.memberId();
     try {
       Member member = memberService.findById(memberId);
       String accessToken = member.getKisAccessToken();
@@ -138,9 +142,12 @@ public class KisController {
   /**
    * 회원 주식 목록 조회
    */
-  @GetMapping("/member-stocks/{memberId}")
-  public ResponseEntity<Response<List<MemberStockResponseDto>>> getMemberStocks(@PathVariable Long memberId) {
+  @GetMapping("/member-stocks")
+  @MemberOnly
+  public ResponseEntity<Response<List<MemberStockResponseDto>>> getMemberStocks(@Auth Accessor accessor) {
     try {
+      Long memberId = accessor.memberId();
+
       Member member = memberService.findById(memberId);
       var memberStocks = memberStockService.getMemberStocks(member);
 

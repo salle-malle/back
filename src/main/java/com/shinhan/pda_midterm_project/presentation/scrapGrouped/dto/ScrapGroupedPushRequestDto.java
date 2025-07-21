@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor // JSON 역직렬화를 위해 기본 생성자 추가
+@NoArgsConstructor
 public class ScrapGroupedPushRequestDto {
     private Long scrapGroupId;
-    private Long memberStockSnapshotId;
+    private Long scrapId; // memberStockSnapshotId -> scrapId 로 변경
 }

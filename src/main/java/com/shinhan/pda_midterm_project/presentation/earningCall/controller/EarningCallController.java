@@ -1,7 +1,10 @@
 package com.shinhan.pda_midterm_project.presentation.earningCall.controller;
 
+import com.shinhan.pda_midterm_project.common.annotation.Auth;
+import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.earning_call.model.EarningCall;
 import com.shinhan.pda_midterm_project.domain.earning_call.service.EarningCallService;
 import com.shinhan.pda_midterm_project.presentation.earningCall.dto.EarningCallResponseDto;
@@ -117,10 +120,11 @@ public class EarningCallController {
   /**
    * 사용자 보유종목의 어닝콜 데이터 조회
    */
-  @GetMapping("/member/{memberId}")
-  public ResponseEntity<Response<List<EarningCallResponseDto>>> getEarningCallsByMemberId(@PathVariable Long memberId) {
+  @GetMapping("/member")
+  @MemberOnly
+  public ResponseEntity<Response<List<EarningCallResponseDto>>> getEarningCallsByMemberId(@Auth Accessor accessor) {
     try {
-      List<EarningCall> earningCalls = earningCallService.getEarningCallsByMemberId(memberId);
+      List<EarningCall> earningCalls = earningCallService.getEarningCallsByMemberId(accessor.memberId());
       List<EarningCallResponseDto> responseDtos = earningCalls.stream()
           .map(EarningCallResponseDto::from)
           .collect(Collectors.toList());
@@ -130,7 +134,7 @@ public class EarningCallController {
           ResponseMessages.EARNING_CALL_GET_BY_MEMBER_SUCCESS.getMessage(),
           responseDtos));
     } catch (Exception e) {
-      log.error("Error retrieving earning calls for memberId: {}", memberId, e);
+      log.error("Error retrieving earning calls for memberId: {}", accessor.memberId(), e);
       return ResponseEntity.badRequest()
           .body(Response.failure(
               ResponseMessages.EARNING_CALL_GET_FAIL.getCode(),
