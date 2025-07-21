@@ -3,14 +3,11 @@ package com.shinhan.pda_midterm_project.presentation.notification.controller;
 import com.shinhan.pda_midterm_project.common.annotation.Auth;
 import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
-import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
 import com.shinhan.pda_midterm_project.common.response.Response;
 
 import com.shinhan.pda_midterm_project.presentation.notification.dto.NotificationResponseDto;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +25,12 @@ public class NotificationController {
      * 클라이언트가 SSE 연결을 요청할 때 호출되는 엔드포인트
      * 로그인 구현 후 memberId 추출 방식만 바꾸면 될듯
      *
-     * @param memberId 클라이언트의 회원 ID
      * @return SseEmitter (서버 → 클라이언트 실시간 통로)
      */
     @GetMapping("/stream")
-    public SseEmitter connect(@RequestParam Long memberId) {
+    @MemberOnly
+    public SseEmitter connect(@Auth Accessor accessor) {
+        Long memberId = accessor.memberId();
         return notificationService.connect(memberId);
     }
 

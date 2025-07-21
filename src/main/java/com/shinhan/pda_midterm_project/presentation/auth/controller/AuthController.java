@@ -39,19 +39,13 @@ public class AuthController {
 		String password = loginRequest.password();
 		ResponseCookie responseCookie = authService.login(id, password);
 
-		Member member = memberService.findByMemberId(id);
-
-		Map<String, Object> result = new HashMap<>();
-		result.put("memberId", member.getId());
-		result.put("userIsLogin", true);
-
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.SET_COOKIE, responseCookie.toString())
 				.body(Response.success(
 						ResponseMessages.LOGIN_SUCCESS.getCode(),
 						ResponseMessages.LOGIN_SUCCESS.getMessage(),
-						result
+						Map.of("userIsLogin", true)
 				));
 	}
 
