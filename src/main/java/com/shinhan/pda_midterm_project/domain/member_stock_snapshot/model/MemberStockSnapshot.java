@@ -6,6 +6,8 @@ import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
