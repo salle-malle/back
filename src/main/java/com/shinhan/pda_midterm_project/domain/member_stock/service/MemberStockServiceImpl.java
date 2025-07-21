@@ -1,7 +1,10 @@
 package com.shinhan.pda_midterm_project.domain.member_stock.service;
 
+import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.service.KoreaInvestmentService;
+import com.shinhan.pda_midterm_project.domain.member.exception.MemberException;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
+import com.shinhan.pda_midterm_project.domain.member_stock.exception.MemberStockException;
 import com.shinhan.pda_midterm_project.domain.member_stock.model.MemberStock;
 import com.shinhan.pda_midterm_project.domain.member_stock.repository.MemberStockRepository;
 import com.shinhan.pda_midterm_project.domain.stock.model.Stock;
@@ -149,6 +152,6 @@ public class MemberStockServiceImpl implements MemberStockService {
   @Transactional(readOnly = true)
   public MemberStock getMemberStock(Member member, String stockId) {
     return memberStockRepository.findByMemberAndStock_StockId(member, stockId)
-        .orElse(null);
+        .orElseThrow(() -> new MemberStockException(ResponseMessages.MEMBER_NO_STOCKS));
   }
 }

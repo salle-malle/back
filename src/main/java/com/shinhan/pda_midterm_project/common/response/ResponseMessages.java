@@ -75,7 +75,12 @@ public enum ResponseMessages {
      * common
      */
     SUCCESS("SUCCESS-001", "요청이 성공적으로 처리되었습니다."),
-    API_ERROR("API-001", "API 호출 중 오류가 발생했습니다.");
+    API_ERROR("API-001", "API 호출 중 오류가 발생했습니다."),
+
+    /**
+     * member stock
+     */
+    MEMBER_NO_STOCKS("MEMBER-STOCK-001", "사용자의 보유종목이 없습니다.");
 
     // 도메인 추가해주세요
     private final String code;

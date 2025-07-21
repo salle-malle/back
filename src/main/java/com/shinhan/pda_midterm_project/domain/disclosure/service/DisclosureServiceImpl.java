@@ -1,6 +1,5 @@
 package com.shinhan.pda_midterm_project.domain.disclosure.service;
 
-import com.shinhan.pda_midterm_project.domain.disclosure.dto.DisclosureResponseDto;
 import com.shinhan.pda_midterm_project.domain.disclosure.dto.DisclosureSimpleDto;
 import com.shinhan.pda_midterm_project.domain.disclosure.model.Disclosure;
 import com.shinhan.pda_midterm_project.domain.disclosure.repository.DisclosureRepository;

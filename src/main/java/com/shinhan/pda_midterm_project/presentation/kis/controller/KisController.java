@@ -1,7 +1,10 @@
 package com.shinhan.pda_midterm_project.presentation.kis.controller;
 
+import com.shinhan.pda_midterm_project.common.annotation.Auth;
+import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.auth.service.KoreaInvestmentService;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
@@ -264,8 +267,10 @@ public class KisController {
   /**
    * 통합 주식 잔고 조회 (일반주식 + 소수점주식)
    */
-  @GetMapping("/unified-stocks/{memberId}")
-  public ResponseEntity<Response<UnifiedStockResponse>> getUnifiedStocks(@PathVariable Long memberId) {
+  @GetMapping("/unified-stocks")
+  @MemberOnly
+  public ResponseEntity<Response<UnifiedStockResponse>> getUnifiedStocks(@Auth Accessor accessor) {
+    Long memberId = accessor.memberId();
     try {
       Member member = memberService.findById(memberId);
       String accessToken = member.getKisAccessToken();
