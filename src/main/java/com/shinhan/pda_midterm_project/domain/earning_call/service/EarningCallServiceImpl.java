@@ -88,13 +88,73 @@ public class EarningCallServiceImpl implements EarningCallService {
   }
 
   /**
-   * Stock이 있으면 조회하고, 없으면 생성
+   * Stock이 있으면 stockName을 업데이트하고, 없으면 생성
    */
   private Stock getOrCreateStock(String symbol, String stockName) {
     Optional<Stock> stockOptional = stockRepository.findById(symbol);
 
     if (stockOptional.isPresent()) {
-      return stockOptional.get();
+      Stock existingStock = stockOptional.get();
+      // 기존 Stock의 stockName을 CSV의 영문명으로 업데이트
+      if (!stockName.equals(existingStock.getStockName())) {
+        Stock updatedStock = Stock.builder()
+            .stockId(existingStock.getStockId())
+            .stockName(stockName) // CSV의 영문명으로 업데이트
+            .rsym(existingStock.getRsym())
+            .zdiv(existingStock.getZdiv())
+            .curr(existingStock.getCurr())
+            .vnit(existingStock.getVnit())
+            .open(existingStock.getOpen())
+            .high(existingStock.getHigh())
+            .low(existingStock.getLow())
+            .last(existingStock.getLast())
+            .base(existingStock.getBase())
+            .pvol(existingStock.getPvol())
+            .pamt(existingStock.getPamt())
+            .tvol(existingStock.getTvol())
+            .tamt(existingStock.getTamt())
+            .uplp(existingStock.getUplp())
+            .dnlp(existingStock.getDnlp())
+            .h52p(existingStock.getH52p())
+            .h52d(existingStock.getH52d())
+            .l52p(existingStock.getL52p())
+            .l52d(existingStock.getL52d())
+            .perx(existingStock.getPerx())
+            .pbrx(existingStock.getPbrx())
+            .epsx(existingStock.getEpsx())
+            .bpsx(existingStock.getBpsx())
+            .shar(existingStock.getShar())
+            .mcap(existingStock.getMcap())
+            .tomv(existingStock.getTomv())
+            .tXprc(existingStock.getTXprc())
+            .tXdif(existingStock.getTXdif())
+            .tXrat(existingStock.getTXrat())
+            .tRate(existingStock.getTRate())
+            .tXsgn(existingStock.getTXsgn())
+            .pXprc(existingStock.getPXprc())
+            .pXdif(existingStock.getPXdif())
+            .pXrat(existingStock.getPXrat())
+            .pRate(existingStock.getPRate())
+            .pXsng(existingStock.getPXsng())
+            .eOrdyn(existingStock.getEOrdyn())
+            .eHogau(existingStock.getEHogau())
+            .eIcod(existingStock.getEIcod())
+            .eParp(existingStock.getEParp())
+            .etypNm(existingStock.getEtypNm())
+            .stockImageUri(existingStock.getStockImageUri())
+            .stockIsDelisted(existingStock.getStockIsDelisted())
+            .ovrsPdno(existingStock.getOvrsPdno())
+            .ovrsItemName(existingStock.getOvrsItemName()) // 한글명은 유지
+            .ovrsExcgCd(existingStock.getOvrsExcgCd())
+            .trCrcyCd(existingStock.getTrCrcyCd())
+            .prdtTypeCd(existingStock.getPrdtTypeCd())
+            .build();
+
+        Stock savedStock = stockRepository.save(updatedStock);
+        log.info("Updated stock: symbol={}, stockName={} (was: {})", symbol, stockName, existingStock.getStockName());
+        return savedStock;
+      }
+      return existingStock;
     } else {
       // Stock이 없으면 새로 생성
       Stock newStock = Stock.builder()
