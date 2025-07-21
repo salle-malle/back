@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000") // 클라이언트의 origin
                 .allowCredentials(true) // credentials(쿠키 등)을 허용
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .maxAge(3600); // preflight 요청 캐시 시간 설정
     }

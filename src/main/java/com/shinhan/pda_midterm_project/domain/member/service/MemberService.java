@@ -15,4 +15,6 @@ public interface MemberService {
      * 회원가입 후 해외주식 잔고 조회 및 저장
      */
     void fetchAndSaveMemberStocks(Member member);
+
+    void updateNickname(Long aLong, String nickname);
 }

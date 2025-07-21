@@ -3,14 +3,13 @@ package com.shinhan.pda_midterm_project.presentation.auth.controller;
 import com.shinhan.pda_midterm_project.common.annotation.Auth;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.common.util.SseEmitterRepository;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.auth.service.AuthService;
 import com.shinhan.pda_midterm_project.domain.auth.service.TokenCookieManager;
-import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import com.shinhan.pda_midterm_project.presentation.auth.dto.request.AuthRequest;
 import jakarta.validation.Valid;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -31,6 +31,7 @@ public class AuthController {
 
 	private final AuthService authService;
 	private final MemberService memberService;
+	private final SseEmitterRepository emitterRepository;
 
 	@PostMapping("/login")
 	public ResponseEntity<Response<Object>> login(
@@ -78,7 +79,12 @@ public class AuthController {
 	}
   
 	@PostMapping("/logout")
-	public ResponseEntity<Void> logout() {
+	public ResponseEntity<Void> logout(@Auth Accessor accessor) {
+		Long memberId = accessor.memberId();
+		emitterRepository.delete(memberId);
+
+		log.info("✅ [connect] 현재 emitterMap: {}", emitterRepository.getEmitterMap());
+
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.SET_COOKIE, TokenCookieManager.deleteCookie().toString())
