@@ -281,6 +281,7 @@ public class KisController {
   @GetMapping("/unified-stocks")
   @MemberOnly
   public ResponseEntity<Response<UnifiedStockResponse>> getUnifiedStocks(@Auth Accessor accessor) {
+    Long memberId = accessor.memberId();
     try {
       Member member = memberService.findById(accessor.memberId());
       String accessToken = member.getKisAccessToken();
