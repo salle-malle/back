@@ -91,12 +91,16 @@ public enum ResponseMessages {
     MEMBER_NO_STOCKS("MEMBER-STOCK-001", "사용자의 보유종목이 없습니다."),
 
     /**
-     * mypage
+     * main news
      */
-    GET_MY_PAGE_SUCCESS("MYPAGE-001", "마이페이지 조회를 성공했습니다."),
-    UPDATE_NICKNAME_SUCCESS("MEMBER-003", "닉네임 변경에 성공했습니다."),
-    UPDATE_INVESTMENT_TYPE_SUCCESS("MYPAGE-004", "투자 성향이 성공적으로 변경되었습니다.");
+    GET_CURRENT_MAIN_NEWS_SUCCESS("MAINNEWS-001", "최근 증시 뉴스 조회를 성공했습니다."),
 
+    /*
+     * my page
+     */
+    GET_MY_PAGE_SUCCESS("MYPAGE-001","마이페이지 조회를 성공했습니다."),
+    UPDATE_NICKNAME_SUCCESS("MEMBER-003","닉네임 변경에 성공했습니다."),
+    UPDATE_INVESTMENT_TYPE_SUCCESS("MYPAGE-004","투자 성향이 성공적으로 변경되었습니다.");
 
     // 도메인 추가해주세요
     private final String code;

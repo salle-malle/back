@@ -160,6 +160,7 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
   @Override
   public UnifiedStockResponse getUnifiedStocks(String accountNumber, String accessToken, String appKey,
       String appSecret) {
+    System.out.println("accountNumber");
     try {
       List<UnifiedStockResponse.UnifiedStockItem> allStocks = new ArrayList<>();
 
