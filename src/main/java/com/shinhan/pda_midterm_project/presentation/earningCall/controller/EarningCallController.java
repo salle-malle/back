@@ -121,13 +121,11 @@ public class EarningCallController {
     /**
      * 사용자 보유종목의 어닝콜 데이터 조회
      */
-    @MemberOnly
     @GetMapping("/member")
-    public ResponseEntity<Response<List<EarningCallResponseDto>>> getEarningCallsByMemberId(
-            @Auth Accessor accessor) {
-      Long memberId = accessor.memberId();
-      try {
-            List<EarningCall> earningCalls = earningCallService.getEarningCallsByMemberId(memberId);
+    @MemberOnly
+    public ResponseEntity<Response<List<EarningCallResponseDto>>> getEarningCallsByMemberId(@Auth Accessor accessor) {
+        try {
+            List<EarningCall> earningCalls = earningCallService.getEarningCallsByMemberId(accessor.memberId());
             List<EarningCallResponseDto> responseDtos = earningCalls.stream()
                     .map(EarningCallResponseDto::from)
                     .collect(Collectors.toList());
@@ -137,7 +135,7 @@ public class EarningCallController {
                     ResponseMessages.EARNING_CALL_GET_BY_MEMBER_SUCCESS.getMessage(),
                     responseDtos));
         } catch (Exception e) {
-            log.error("Error retrieving earning calls for memberId: {}", memberId, e);
+            log.error("Error retrieving earning calls for memberId: {}", accessor.memberId(), e);
             return ResponseEntity.badRequest()
                     .body(Response.failure(
                             ResponseMessages.EARNING_CALL_GET_FAIL.getCode(),
