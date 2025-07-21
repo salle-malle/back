@@ -41,4 +41,13 @@ public class NewsCrawlingDto {
         private String newsUri;
         private String newsDate;
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class MainNewsResponse {
+        @JsonProperty("crawl_results")
+        private List<CrawledArticle> crawlResults;
+    }
 }

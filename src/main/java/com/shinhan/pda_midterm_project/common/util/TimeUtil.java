@@ -8,7 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 public class TimeUtil {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Date localDateTimeToDate(LocalDateTime localDateTime, Clock clock) {
         return Date.from(localDateTime.atZone(clock.getZone()).toInstant());

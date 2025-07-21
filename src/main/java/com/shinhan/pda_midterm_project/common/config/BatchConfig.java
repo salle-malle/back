@@ -4,6 +4,7 @@ import com.shinhan.pda_midterm_project.domain.disclosure.DisclosureProcessor;
 import com.shinhan.pda_midterm_project.domain.disclosure.DisclosureReader;
 import com.shinhan.pda_midterm_project.domain.disclosure.DisclosureWriter;
 import com.shinhan.pda_midterm_project.domain.disclosure.model.Disclosure;
+import com.shinhan.pda_midterm_project.domain.main_news.service.MainNewsCrawlingTasklet;
 import com.shinhan.pda_midterm_project.domain.news.service.NewsCrawlingTasklet;
 import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
@@ -29,13 +30,27 @@ import java.util.List;
 
 @Slf4j
 @Configuration
-//@EnableBatchProcessing
 @RequiredArgsConstructor
 public class BatchConfig {
     private final NewsCrawlingTasklet newsCrawlingTasklet;
     private final DisclosureReader disclosureReader;
     private final DisclosureProcessor disclosureProcessor;
     private final DisclosureWriter disclosureWriter;
+    private final MainNewsCrawlingTasklet mainNewsCrawlingTasklet;
+
+    @Bean
+    public Job mainNewsCrawlingJob(JobRepository jobRepository, Step mainNewsCrawlingStep) {
+        return new JobBuilder("mainNewsCrawlingJob", jobRepository)
+                .start(mainNewsCrawlingStep)
+                .build();
+    }
+
+    @Bean
+    public Step mainNewsCrawlingStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("mainNewsCrawlingStep", jobRepository)
+                .tasklet(mainNewsCrawlingTasklet, transactionManager)
+                .build();
+    }
 
     @Bean
     public Job disclosureJob(JobRepository jobRepository, Step disclosureChunkStep) {

@@ -80,7 +80,12 @@ public enum ResponseMessages {
     /**
      * member stock
      */
-    MEMBER_NO_STOCKS("MEMBER-STOCK-001", "사용자의 보유종목이 없습니다.");
+    MEMBER_NO_STOCKS("MEMBER-STOCK-001", "사용자의 보유종목이 없습니다."),
+
+    /**
+     * main news
+     */
+    GET_CURRENT_MAIN_NEWS_SUCCESS("MAINNEWS-001", "최근 증시 뉴스 조회를 성공했습니다.");
 
     // 도메인 추가해주세요
     private final String code;
