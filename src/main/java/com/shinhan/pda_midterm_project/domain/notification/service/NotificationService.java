@@ -1,8 +1,11 @@
 package com.shinhan.pda_midterm_project.domain.notification.service;
 
 import com.shinhan.pda_midterm_project.common.util.SseEmitterRepository;
+import com.shinhan.pda_midterm_project.domain.member.model.Member;
+import com.shinhan.pda_midterm_project.domain.member.repository.MemberRepository;
 import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
 import com.shinhan.pda_midterm_project.domain.notification.repository.NotificationRepository;
+import com.shinhan.pda_midterm_project.presentation.notification.dto.NotificationResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -16,10 +19,12 @@ public class NotificationService {
 
     private final SseEmitterRepository emitterRepository;
     private final NotificationRepository notificationRepository;
+    private final MemberRepository memberRepository;
 
-    public NotificationService(SseEmitterRepository emitterRepository, NotificationRepository notificationRepository) {
+    public NotificationService(SseEmitterRepository emitterRepository, NotificationRepository notificationRepository, MemberRepository memberRepository) {
         this.emitterRepository = emitterRepository;
         this.notificationRepository = notificationRepository;
+        this.memberRepository = memberRepository;
     }
 
     /**
@@ -79,4 +84,15 @@ public class NotificationService {
         return notificationRepository.findByMemberIdAndCreatedAtBetween(memberId, startOfDay, endOfDay);
     }
 
+    public List<NotificationResponseDto> getByMemberId(Long memberId) {
+        return notificationRepository.findByMemberId(memberId).stream()
+                .map(n -> NotificationResponseDto.builder()
+                        .id(n.getId())
+                        .title(n.getNotificationTitle())
+                        .message(n.getNotificationContent())
+                        .read(n.getNotificationIsRead())
+                        .time(n.getCreatedAt())
+                        .build())
+                .toList();
+    }
 }
