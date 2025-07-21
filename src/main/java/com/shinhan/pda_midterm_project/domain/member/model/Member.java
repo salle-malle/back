@@ -90,4 +90,8 @@ public class Member extends BaseEntity {
                 .memberPhone(memberPhone)
                 .build();
     }
+
+    public void updateInvestmentType(InvestmentType investmentType) {
+        this.investmentType = investmentType;
+    }
 }

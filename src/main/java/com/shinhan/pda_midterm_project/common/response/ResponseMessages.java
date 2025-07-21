@@ -94,7 +94,8 @@ public enum ResponseMessages {
      * mypage
      */
     GET_MY_PAGE_SUCCESS("MYPAGE-001", "마이페이지 조회를 성공했습니다."),
-    UPDATE_NICKNAME_SUCCESS("MEMBER-003", "닉네임 변경에 성공했습니다.");
+    UPDATE_NICKNAME_SUCCESS("MEMBER-003", "닉네임 변경에 성공했습니다."),
+    UPDATE_INVESTMENT_TYPE_SUCCESS("MYPAGE-004", "투자 성향이 성공적으로 변경되었습니다.");
 
 
     // 도메인 추가해주세요

@@ -9,6 +9,7 @@ import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import com.shinhan.pda_midterm_project.domain.member.service.MyPageService;
+import com.shinhan.pda_midterm_project.presentation.member.dto.request.UpdateInvestmentTypeRequest;
 import com.shinhan.pda_midterm_project.presentation.member.dto.request.UpdateNicknameRequest;
 import com.shinhan.pda_midterm_project.presentation.member.dto.response.MyPageResponse;
 import jakarta.validation.Valid;
@@ -46,4 +47,17 @@ public class MyPageController {
                 ResponseMessages.UPDATE_NICKNAME_SUCCESS.getMessage()
         );
     }
+
+    @PatchMapping("/investment-type")
+    public Response<Void> updateInvestmentType(
+            @Auth Accessor accessor,
+            @RequestBody @Valid UpdateInvestmentTypeRequest request
+    ) {
+        myPageService.updateInvestmentType(accessor.memberId(), request.investmentTypeId());
+        return Response.success(
+                ResponseMessages.UPDATE_INVESTMENT_TYPE_SUCCESS.getCode(),
+                ResponseMessages.UPDATE_INVESTMENT_TYPE_SUCCESS.getMessage()
+        );
+    }
+
 }
