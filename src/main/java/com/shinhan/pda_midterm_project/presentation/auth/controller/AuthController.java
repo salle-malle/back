@@ -76,7 +76,7 @@ public class AuthController {
 		}
 		return ResponseEntity.ok(Response.success("200", "인증된 사용자입니다."));
 	}
-
+  
 	@PostMapping("/logout")
 	public ResponseEntity<Void> logout() {
 		return ResponseEntity
@@ -84,5 +84,4 @@ public class AuthController {
 				.header(HttpHeaders.SET_COOKIE, TokenCookieManager.deleteCookie().toString())
 				.build();
 	}
-
 }

@@ -168,13 +168,13 @@ public class MemberServiceImpl implements MemberService {
             // 새로운 Stock 엔티티 생성 (기본 정보만)
             Stock stock = Stock.builder()
                     .stockId(item.getOvrsPdno())
-                    .stockName(item.getOvrsItemName())
+                    .stockName(item.getOvrsPdno()) // stockName은 종목코드로 설정 (영문명은 CSV에서 설정됨)
                     // 기본 주식 정보
                     .rsym(item.getOvrsPdno()) // 종목 심볼을 종목코드로 설정
                     .curr(item.getTrCrcyCd()) // 통화
                     // 해외주식 관련 필드들
                     .ovrsPdno(item.getOvrsPdno())
-                    .ovrsItemName(item.getOvrsItemName())
+                    .ovrsItemName(item.getOvrsItemName()) // 한글명은 ovrsItemName에 저장
                     .ovrsExcgCd(item.getOvrsExcgCd())
                     .trCrcyCd(item.getTrCrcyCd())
                     .stockIsDelisted(false)
@@ -192,13 +192,13 @@ public class MemberServiceImpl implements MemberService {
             // 새로운 Stock 엔티티 생성 (소수점 주식 정보)
             Stock stock = Stock.builder()
                     .stockId(item.getPdno())
-                    .stockName(item.getPrdtName())
+                    .stockName(item.getPdno()) // stockName은 종목코드로 설정 (영문명은 CSV에서 설정됨)
                     // 기본 주식 정보
                     .rsym(item.getPdno()) // 종목 심볼을 종목코드로 설정
                     .curr(item.getBuyCrcyCd()) // 통화
                     // 해외주식 관련 필드들 (소수점 주식의 경우 일부 필드가 다를 수 있음)
                     .ovrsPdno(item.getPdno())
-                    .ovrsItemName(item.getPrdtName())
+                    .ovrsItemName(item.getPrdtName()) // 한글명은 ovrsItemName에 저장
                     .ovrsExcgCd(item.getOvrsExcgCd() != null ? item.getOvrsExcgCd() : "NASD") // 기본값 설정
                     .trCrcyCd(item.getBuyCrcyCd())
                     .stockIsDelisted(false)

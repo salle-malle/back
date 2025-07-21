@@ -63,10 +63,8 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
       headers.set("custtype", "P");
 
       // GET 요청으로 변경하고 파라미터를 쿼리스트링으로 전달
-      // UriComponentsBuilder builder =
-      // UriComponentsBuilder.fromHttpUrl(STOCK_DETAIL_URL)
       UriComponentsBuilder builder = UriComponentsBuilder.newInstance().uri(URI.create(STOCK_DETAIL_URL))
-          .queryParam("AUTH", request.getAUTH())
+          .queryParam("AUTH", request.getAUTH() != null ? request.getAUTH() : "")
           .queryParam("EXCD", request.getEXCD())
           .queryParam("SYMB", request.getSYMB());
 
@@ -74,7 +72,10 @@ public class KoreaInvestmentServiceImpl implements KoreaInvestmentService {
 
       HttpEntity<String> httpRequest = new HttpEntity<>(headers);
 
-      return restTemplate.exchange(url, HttpMethod.GET, httpRequest, KisStockDetailResponse.class).getBody();
+      KisStockDetailResponse response = restTemplate
+          .exchange(url, HttpMethod.GET, httpRequest, KisStockDetailResponse.class).getBody();
+
+      return response;
     } catch (Exception e) {
       System.err.println("Error calling KIS API: " + e.getMessage());
       e.printStackTrace();

@@ -9,6 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class KisStockDetailRequest {
+  @JsonProperty("stockCode")
+  private String stockCode; // 주식 코드 (예: AAPL, TSLA, VOO)
+
   @JsonProperty("AUTH")
   private String AUTH; // 인증토큰
 

@@ -26,15 +26,23 @@ public enum ResponseMessages {
     CERTIFICATION_VERIFY_SUCCESS("AUTH-009", "인증번호 검증을 성공했습니다."),
 
     /**
+     * card
+     */
+    GET_CARD_DETAIL_SUCCESS("CARD-001", "카드 상세 가져오기 성공"),
+    GET_CARD_LIST_SUCCESS("CARD-002", "카드 리스트 가져오기 성공"),
+    /**
      * scrap
      */
     GET_SCRAP_GROUP_SUCCESS("GROUP-001", "유저 스크랩 그룹 가져오기 성공"),
     GET_SCRAP_GROUPED_SUCCESS("GROUPED-001", "유저 스크랩 그룹의 스크랩들 가져오기 성공"),
     POST_SCRAP_GROUPED_SUCCESS("GROUP-002", "유저 스크랩 그룹 추가 성공"),
-    CREATE_SCRAP_GROUPED_SUCCESS("GROUPED-002", "스크랩 추가 성공"),
-    DELETE_SCRAP_GROUPED_SUCCESS("GROUPED-003", "스크랩 삭제 성공"),
+    CREATE_SCRAP_GROUPED_SUCCESS("GROUPED-002", "그룹의 스크랩 추가 성공"),
+    DELETE_SCRAP_GROUPED_SUCCESS("GROUPED-003", "그룹의 스크랩 삭제 성공"),
     PUT_SCRAP_GROUP_NAME_SUCCESS("GROUP-003", "스크랩 그룹 이름 업데이트 성공"),
     DELETE_SCRAP_GROUP_SUCCESS("GROUP-004", "스크랩 그룹 삭제 성공"),
+    CREATE_SCRAP_SUCCESS("SCRAP-001", "스크랩 추가 성공"),
+    DELETE_SCRAP_SUCCESS("SCRAP-002", "스크랩 삭제 성공"),
+    GET_SCRAP_GROUP_STATUS_SUCCESS("GROUP-004", "스크랩 여부 확인 성공"),
 
     /**
      * earning call
@@ -67,10 +75,20 @@ public enum ResponseMessages {
     STOCK_ALREADY_EXISTS("STOCK-006", "이미 존재하는 주식 정보입니다."),
 
     /**
+     * disclosure
+     */
+    GET_MY_CURRENT_DISCLOSURE_SUCCESS("DISCLOSURE-001", "나의 최근 공시정보를 성공적으로 조회했습니다."),
+
+    /**
      * common
      */
     SUCCESS("SUCCESS-001", "요청이 성공적으로 처리되었습니다."),
-    API_ERROR("API-001", "API 호출 중 오류가 발생했습니다.");
+    API_ERROR("API-001", "API 호출 중 오류가 발생했습니다."),
+
+    /**
+     * member stock
+     */
+    MEMBER_NO_STOCKS("MEMBER-STOCK-001", "사용자의 보유종목이 없습니다.");
 
     // 도메인 추가해주세요
     private final String code;
