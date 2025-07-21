@@ -9,6 +9,7 @@ import com.shinhan.pda_midterm_project.domain.auth.service.KoreaInvestmentServic
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import com.shinhan.pda_midterm_project.domain.member_stock.service.MemberStockService;
+import com.shinhan.pda_midterm_project.domain.stock.repository.StockRepository;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.request.KisBalanceRequest;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.request.KisPresentBalanceRequest;
 import com.shinhan.pda_midterm_project.presentation.kis.dto.request.KisStockDetailRequest;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,6 +35,7 @@ public class KisController {
   private final KoreaInvestmentService koreaInvestmentService;
   private final MemberService memberService;
   private final MemberStockService memberStockService;
+  private final StockRepository stockRepository;
 
   /**
    * 한국투자증권 액세스 토큰 발급
@@ -73,28 +76,75 @@ public class KisController {
             "액세스 토큰이 없습니다. 회원가입을 먼저 진행해주세요."));
       }
 
-      // 기본값 설정
-      if (request.getAUTH() == null) {
-        request.setAUTH("");
-      }
-      if (request.getEXCD() == null) {
-        request.setEXCD(request.getEXCD()); // 나스닥
-      }
-      if (request.getSYMB() == null) {
-        request.setSYMB(request.getSYMB()); // 테슬라
+      // 주식 코드가 없으면 에러 반환
+      if (request.getStockCode() == null || request.getStockCode().isEmpty()) {
+        return ResponseEntity.badRequest().body(Response.failure(
+            ResponseMessages.API_ERROR.getCode(),
+            "주식 코드가 필요합니다."));
       }
 
-      KisStockDetailResponse response = koreaInvestmentService.getStockDetail(
-          request, accessToken, member.getMemberAppKey(), member.getMemberAppSecret());
+      // 주식 DB에서 거래소 정보 조회
+      Optional<com.shinhan.pda_midterm_project.domain.stock.model.Stock> stockOpt = stockRepository
+          .findById(request.getStockCode());
 
-      return ResponseEntity.ok(Response.success(
-          ResponseMessages.SUCCESS.getCode(),
-          ResponseMessages.SUCCESS.getMessage(),
-          response));
+      if (stockOpt.isPresent()) {
+        com.shinhan.pda_midterm_project.domain.stock.model.Stock stock = stockOpt.get();
+        String exchangeCode = stock.getOvrsExcgCd();
+
+        // 거래소 코드 매핑 (DB 코드를 KIS API 코드로 변환)
+        String kisExchangeCode = mapExchangeCodeForKis(exchangeCode);
+
+        // KIS API 요청용 객체 생성
+        KisStockDetailRequest kisRequest = new KisStockDetailRequest();
+        kisRequest.setAUTH(""); // AUTH는 항상 빈 문자열
+        kisRequest.setEXCD(kisExchangeCode); // DB에서 조회한 거래소 코드
+        kisRequest.setSYMB(request.getStockCode()); // 주식 코드
+
+        KisStockDetailResponse response = koreaInvestmentService.getStockDetail(
+            kisRequest, accessToken, member.getMemberAppKey(), member.getMemberAppSecret());
+
+        // KIS API 응답에서 종목명이 빈 값이면 DB에서 조회한 값으로 대체
+        if (response != null && response.getOutput() != null) {
+          String kisEtypNm = response.getOutput().getEtypNm();
+          response.getOutput().setEtypNm(stock.getStockName());
+        }
+
+        return ResponseEntity.ok(Response.success(
+            ResponseMessages.SUCCESS.getCode(),
+            ResponseMessages.SUCCESS.getMessage(),
+            response));
+      } else {
+        return ResponseEntity.badRequest().body(Response.failure(
+            ResponseMessages.API_ERROR.getCode(),
+            "해당 주식 정보를 찾을 수 없습니다: " + request.getStockCode()));
+      }
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(Response.failure(
           ResponseMessages.API_ERROR.getCode(),
           "주식 상세 조회 실패: " + e.getMessage()));
+    }
+  }
+
+  /**
+   * DB 거래소 코드를 KIS API 거래소 코드로 매핑
+   */
+  private String mapExchangeCodeForKis(String dbExchangeCode) {
+    if (dbExchangeCode == null) {
+      return "NASD"; // 기본값
+    }
+
+    switch (dbExchangeCode.toUpperCase()) {
+      case "NASD":
+      case "NAS":
+        return "NAS"; // 나스닥
+      case "NYSE":
+      case "NYS":
+        return "NYS"; // 뉴욕
+      case "AMEX":
+      case "AMX":
+        return "AMS"; // 아멕스
+      default:
+        return "NASD"; // 기본값
     }
   }
 
