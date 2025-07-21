@@ -117,7 +117,7 @@ public class EarningCallController {
                             ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": " + e.getMessage()));
         }
     }
-
+  
     /**
      * 사용자 보유종목의 어닝콜 데이터 조회
      */

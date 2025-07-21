@@ -149,9 +149,9 @@ public class MemberStockServiceImpl implements MemberStockService {
     return memberStockRepository.findByMemberAndStock_StockId(member, stockId)
         .orElseThrow(() -> new MemberStockException(ResponseMessages.MEMBER_NO_STOCKS));
   }
-  /**
-   * 회원이 보유한 모든 주식의 상세정보를 갱신
-   */
+
+  
+  
   @Override
   @Transactional
   public void refreshAllMemberStockDetails(Member member) {
@@ -180,9 +180,6 @@ public class MemberStockServiceImpl implements MemberStockService {
     }
   }
 
-  /**
-   * 거래소별로 주식 상세정보 업데이트
-   */
   private void updateStockDetailFromKisWithExchange(String stockId, String accessToken, Member member,
       String exchangeCode) {
     // 거래소 코드 매핑
@@ -190,7 +187,6 @@ public class MemberStockServiceImpl implements MemberStockService {
 
     // 주식 상세 정보 조회
     KisStockDetailRequest request = new KisStockDetailRequest();
-    // AUTH 파라미터 제거 - 헤더의 authorization만 사용
     request.setEXCD(apiExchangeCode);
     request.setSYMB(stockId);
 
@@ -206,9 +202,6 @@ public class MemberStockServiceImpl implements MemberStockService {
     }
   }
 
-  /**
-   * 거래소 코드 매핑
-   */
   private String mapExchangeCode(String exchangeCode) {
     if (exchangeCode == null) {
       return "NAS"; // 기본값

@@ -26,15 +26,23 @@ public enum ResponseMessages {
     CERTIFICATION_VERIFY_SUCCESS("AUTH-009", "인증번호 검증을 성공했습니다."),
 
     /**
+     * card
+     */
+    GET_CARD_DETAIL_SUCCESS("CARD-001", "카드 상세 가져오기 성공"),
+    GET_CARD_LIST_SUCCESS("CARD-002", "카드 리스트 가져오기 성공"),
+    /**
      * scrap
      */
     GET_SCRAP_GROUP_SUCCESS("GROUP-001", "유저 스크랩 그룹 가져오기 성공"),
     GET_SCRAP_GROUPED_SUCCESS("GROUPED-001", "유저 스크랩 그룹의 스크랩들 가져오기 성공"),
     POST_SCRAP_GROUPED_SUCCESS("GROUP-002", "유저 스크랩 그룹 추가 성공"),
-    CREATE_SCRAP_GROUPED_SUCCESS("GROUPED-002", "스크랩 추가 성공"),
-    DELETE_SCRAP_GROUPED_SUCCESS("GROUPED-003", "스크랩 삭제 성공"),
+    CREATE_SCRAP_GROUPED_SUCCESS("GROUPED-002", "그룹의 스크랩 추가 성공"),
+    DELETE_SCRAP_GROUPED_SUCCESS("GROUPED-003", "그룹의 스크랩 삭제 성공"),
     PUT_SCRAP_GROUP_NAME_SUCCESS("GROUP-003", "스크랩 그룹 이름 업데이트 성공"),
     DELETE_SCRAP_GROUP_SUCCESS("GROUP-004", "스크랩 그룹 삭제 성공"),
+    CREATE_SCRAP_SUCCESS("SCRAP-001", "스크랩 추가 성공"),
+    DELETE_SCRAP_SUCCESS("SCRAP-002", "스크랩 삭제 성공"),
+    GET_SCRAP_GROUP_STATUS_SUCCESS("GROUP-004", "스크랩 여부 확인 성공"),
 
     /**
      * earning call
@@ -85,7 +93,14 @@ public enum ResponseMessages {
     /**
      * main news
      */
-    GET_CURRENT_MAIN_NEWS_SUCCESS("MAINNEWS-001", "최근 증시 뉴스 조회를 성공했습니다.");
+    GET_CURRENT_MAIN_NEWS_SUCCESS("MAINNEWS-001", "최근 증시 뉴스 조회를 성공했습니다."),
+
+    /*
+     * my page
+     */
+    GET_MY_PAGE_SUCCESS("MYPAGE-001","마이페이지 조회를 성공했습니다."),
+    UPDATE_NICKNAME_SUCCESS("MEMBER-003","닉네임 변경에 성공했습니다."),
+    UPDATE_INVESTMENT_TYPE_SUCCESS("MYPAGE-004","투자 성향이 성공적으로 변경되었습니다.");
 
     // 도메인 추가해주세요
     private final String code;

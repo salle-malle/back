@@ -1,6 +1,7 @@
 // domain/scrap_group/service/ScrapGroupedService.java 경로에 파일 생성
 package com.shinhan.pda_midterm_project.domain.scrap_group.service;
 
+import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.GroupInclusionStatusDto;
 import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.ScrapGroupResponseDto;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public interface ScrapGroupService {
 
     ScrapGroupResponseDto createScrapGroup(Long memberId, String ScrapGroupName);
 
-    ScrapGroupResponseDto updateScrapGroup(Long scrapGroupId, String scrapGroupName);
+    ScrapGroupResponseDto updateScrapGroup(Long memberId, Long scrapGroupId, String newScrapGroupName);
 
     ScrapGroupResponseDto deleteScrapGroup(Long memberId, Long scrapGroupedId);
+    List<GroupInclusionStatusDto> getGroupInclusionStatus(Long memberId, Long scrapId);
 }
