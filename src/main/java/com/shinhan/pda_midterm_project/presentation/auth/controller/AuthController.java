@@ -5,6 +5,7 @@ import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.auth.service.AuthService;
+import com.shinhan.pda_midterm_project.domain.auth.service.TokenCookieManager;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import com.shinhan.pda_midterm_project.presentation.auth.dto.request.AuthRequest;
@@ -80,6 +81,14 @@ public class AuthController {
 					.body(Response.failure("401", "인증이 필요합니다."));
 		}
 		return ResponseEntity.ok(Response.success("200", "인증된 사용자입니다."));
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout() {
+		return ResponseEntity
+				.ok()
+				.header(HttpHeaders.SET_COOKIE, TokenCookieManager.deleteCookie().toString())
+				.build();
 	}
 
 }

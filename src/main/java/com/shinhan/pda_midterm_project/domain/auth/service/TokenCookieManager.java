@@ -28,4 +28,15 @@ public class TokenCookieManager {
                 .path("/")
                 .build();
     }
+
+    public static ResponseCookie deleteCookie() {
+        return ResponseCookie.from(TOKEN_NAME, "")
+                .path("/")
+                .maxAge(0)
+                .secure(true)
+                .httpOnly(true)
+                .sameSite("none")
+                .build();
+    }
+
 }
