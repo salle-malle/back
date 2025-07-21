@@ -5,9 +5,14 @@ import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.auth.service.AuthService;
+import com.shinhan.pda_midterm_project.domain.member.model.Member;
+import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import com.shinhan.pda_midterm_project.presentation.auth.dto.request.AuthRequest;
 import jakarta.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
 	private final AuthService authService;
+	private final MemberService memberService;
 
 	@PostMapping("/login")
 	public ResponseEntity<Response<Object>> login(
@@ -32,12 +38,20 @@ public class AuthController {
 		String password = loginRequest.password();
 		ResponseCookie responseCookie = authService.login(id, password);
 
+		Member member = memberService.findByMemberId(id);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("memberId", member.getId());
+		result.put("userIsLogin", true);
+
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.SET_COOKIE, responseCookie.toString())
 				.body(Response.success(
 						ResponseMessages.LOGIN_SUCCESS.getCode(),
-						ResponseMessages.LOGIN_SUCCESS.getMessage()));
+						ResponseMessages.LOGIN_SUCCESS.getMessage(),
+						result
+				));
 	}
 
 	@PostMapping("/signup")
