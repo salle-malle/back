@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,4 +96,24 @@ public class NotificationService {
                         .build())
                 .toList();
     }
+
+    @Transactional
+    public void markAsRead(Long notificationId, Long memberId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 알림이 존재하지 않습니다."));
+
+        if (!notification.getMember().getId().equals(memberId)) {
+            throw new SecurityException("알림 소유자가 아닙니다.");
+        }
+
+        if (!Boolean.TRUE.equals(notification.getNotificationIsRead())) {
+            notification.markAsRead(); // 엔티티에서 처리
+            notificationRepository.save(notification);
+        }
+    }
+
+    public boolean hasUnreadNotifications(Long memberId) {
+        return notificationRepository.existsByMemberIdAndNotificationIsReadFalse(memberId);
+    }
+
 }

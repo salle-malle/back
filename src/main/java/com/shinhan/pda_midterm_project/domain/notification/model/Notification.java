@@ -33,4 +33,8 @@ public class Notification extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String notificationUrl;
+
+    public void markAsRead() {
+        this.notificationIsRead = true;
+    }
 }
