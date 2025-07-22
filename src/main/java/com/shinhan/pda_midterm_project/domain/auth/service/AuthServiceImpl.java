@@ -33,10 +33,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseCookie signUp(String id, String password, String phoneNumber, String appKey, String appSecret,
+    public ResponseCookie signUp(String name, String nickname, String id, String password, String phoneNumber,
+                                 String appKey, String appSecret,
                                  String accountNumber) {
         String hashedPw = BCrypt.hashpw(password, BCrypt.gensalt());
-        Member member = Member.create(id, hashedPw, phoneNumber);
+        Member member = Member.create(id, name, hashedPw, phoneNumber, nickname, accountNumber, appKey,
+                appSecret);
 
         // KIS 관련 정보 설정
         member.setKisInfo(appKey, appSecret, accountNumber);

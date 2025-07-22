@@ -53,13 +53,16 @@ public class AuthController {
 	@PostMapping("/signup")
 	public ResponseEntity<Response<Object>> signUp(
 			@Valid @RequestBody AuthRequest.SignUp signUpRequest) {
-		String id = signUpRequest.id();
-		String password = signUpRequest.password();
+		String name = signUpRequest.name();
 		String phoneNumber = signUpRequest.phoneNumber();
+		String id = signUpRequest.userId();
+		String password = signUpRequest.password();
 		String appKey = signUpRequest.appKey();
 		String appSecret = signUpRequest.appSecret();
 		String accountNumber = signUpRequest.accountNumber();
-		ResponseCookie responseCookie = authService.signUp(id, password, phoneNumber, appKey, appSecret, accountNumber);
+		String nickname = signUpRequest.nickname();
+
+		ResponseCookie responseCookie = authService.signUp(name, nickname, id, password, phoneNumber, appKey, appSecret, accountNumber);
 
 		return ResponseEntity
 				.ok()
