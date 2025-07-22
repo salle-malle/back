@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(("/api/v1/member"))
+@RequestMapping("/api/v1/member")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -74,6 +74,20 @@ public class MemberController {
                 .body(Response.success(
                         ResponseMessages.CERTIFICATION_REQUEST_SUCCESS.getCode(),
                         ResponseMessages.CERTIFICATION_REQUEST_SUCCESS.getMessage()
+                ));
+    }
+
+    @PostMapping("check/memberId")
+    public ResponseEntity<Response<String>> checkMemberIdDuplicated(
+            @Valid @RequestBody MemberDto.MemberId memberIdRequest
+    ) {
+        String memberId = memberIdRequest.memberId();
+        memberService.checkMemberIdDuplicated(memberId);
+        return ResponseEntity
+                .ok()
+                .body(Response.success(
+                        ResponseMessages.SUCCESS.getCode(),
+                        ResponseMessages.SUCCESS.getMessage()
                 ));
     }
 }
