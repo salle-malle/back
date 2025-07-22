@@ -12,4 +12,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByMemberIdAndCreatedAtBetween(Long memberId, LocalDateTime start, LocalDateTime end);
 
     List<Notification> findByMemberId(Long memberId);
+
+    boolean existsByMemberIdAndNotificationIsReadFalse(Long memberId);
 }

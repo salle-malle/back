@@ -111,4 +111,9 @@ public class NotificationService {
             notificationRepository.save(notification);
         }
     }
+
+    public boolean hasUnreadNotifications(Long memberId) {
+        return notificationRepository.existsByMemberIdAndNotificationIsReadFalse(memberId);
+    }
+
 }

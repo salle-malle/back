@@ -99,6 +99,7 @@ public enum ResponseMessages {
      * notification
      */
     MARK_NOTIFICATION_AS_READ_SUCCESS("NOTI-001", "알림 읽음 처리에 성공했습니다."),
+    HAS_UNREAD_NOTIFICATION_SUCCESS("NOTI-002", "읽지 않은 알림 존재 여부 조회 성공"),
 
     /*
      * my page

@@ -9,6 +9,7 @@ import com.shinhan.pda_midterm_project.common.response.Response;
 
 import com.shinhan.pda_midterm_project.presentation.notification.dto.NotificationResponseDto;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,16 @@ public class NotificationController {
         return ResponseEntity.ok(Response.success(
                 ResponseMessages.MARK_NOTIFICATION_AS_READ_SUCCESS.getCode(),
                 ResponseMessages.MARK_NOTIFICATION_AS_READ_SUCCESS.getMessage()
+        ));
+    }
+
+    @GetMapping("/unread-exists")
+    public ResponseEntity<?> hasUnreadNotifications(@Auth Accessor accessor) {
+        boolean hasUnread = notificationService.hasUnreadNotifications(accessor.memberId());
+        return ResponseEntity.ok(Response.success(
+                ResponseMessages.HAS_UNREAD_NOTIFICATION_SUCCESS.getCode(),
+                ResponseMessages.HAS_UNREAD_NOTIFICATION_SUCCESS.getMessage(),
+                Map.of("hasUnread", hasUnread)
         ));
     }
 
