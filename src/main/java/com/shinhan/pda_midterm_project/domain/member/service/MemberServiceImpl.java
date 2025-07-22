@@ -134,7 +134,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private List<KisPresentBalanceResponse.KisPresentBalanceItem> getFractionalBalanceItems(Member member,
-            String accessToken) {
+                                                                                            String accessToken) {
         List<KisPresentBalanceResponse.KisPresentBalanceItem> allItems = new ArrayList<>();
 
         try {
@@ -230,7 +230,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void saveMemberStockFromPresentBalanceItem(Member member,
-            KisPresentBalanceResponse.KisPresentBalanceItem item) {
+                                                       KisPresentBalanceResponse.KisPresentBalanceItem item) {
         // Stock 엔티티 조회 (소수점 주식은 pdno를 사용)
         Optional<Stock> stock = stockRepository.findByOvrsPdno(item.getPdno());
 
@@ -255,5 +255,13 @@ public class MemberServiceImpl implements MemberService {
     public void updateNickname(Long memberId, String newNickname) {
         Member member = findById(memberId);
         member.updateProfile(newNickname, member.getMemberPhone());
+    }
+
+    @Override
+    public void checkMemberIdDuplicated(String memberId) {
+        Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
+        if (optionalMember.isPresent()) {
+            throw new MemberException(ResponseMessages.MEMBER_ALREADY_EXISTS);
+        }
     }
 }

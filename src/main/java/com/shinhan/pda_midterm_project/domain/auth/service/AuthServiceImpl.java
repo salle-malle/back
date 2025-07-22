@@ -2,6 +2,7 @@ package com.shinhan.pda_midterm_project.domain.auth.service;
 
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.exception.AuthException;
+import com.shinhan.pda_midterm_project.domain.member.exception.MemberException;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -33,35 +34,28 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseCookie signUp(String id, String password, String phoneNumber, String appKey, String appSecret,
+    public ResponseCookie signUp(String name, String nickname, String id, String password, String phoneNumber,
+                                 String appKey, String appSecret,
                                  String accountNumber) {
         String hashedPw = BCrypt.hashpw(password, BCrypt.gensalt());
-        Member member = Member.create(id, hashedPw, phoneNumber);
+        Member member = Member.create(id, name, hashedPw, phoneNumber, nickname, accountNumber, appKey,
+                appSecret);
 
         // KIS 관련 정보 설정
         member.setKisInfo(appKey, appSecret, accountNumber);
 
-        try {
-            var tokenResponse = koreaInvestmentService.getAccessToken(
-                    member.getMemberAppKey(),
-                    member.getMemberAppSecret());
-            String accessToken = tokenResponse.getAccessToken();
+        var tokenResponse = koreaInvestmentService.getAccessToken(
+                member.getMemberAppKey(),
+                member.getMemberAppSecret());
+        String kisAccessToken = tokenResponse.getAccessToken();
 
-            if (accessToken == null || accessToken.isEmpty()) {
-                throw new RuntimeException("Failed to get access token from KIS API");
-            }
-
-            // 토큰을 Member 엔티티에 저장
-            member.updateKisAccessToken(accessToken);
-            memberService.saveMember(member);
-
-        } catch (Exception e) {
-            System.err.println("Error getting KIS access token: " + e.getMessage());
-            e.printStackTrace();
-            // 토큰 발급 실패 시에도 회원은 저장
-            memberService.saveMember(member);
-            throw new RuntimeException("Failed to get KIS access token during signup", e);
+        if (kisAccessToken == null || kisAccessToken.isEmpty()) {
+            throw new MemberException(ResponseMessages.INVALID_ACCOUNT_INFO);
         }
+
+        // 토큰을 Member 엔티티에 저장
+        member.updateKisAccessToken(kisAccessToken);
+        memberService.saveMember(member);
 
         // DB에 저장된 member를 다시 조회하여 토큰이 포함된 상태로 가져옴
         Member savedMember = memberService.findById(member.getId());

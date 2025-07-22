@@ -11,6 +11,9 @@ public enum ResponseMessages {
      */
     MEMBER_NOT_FOUND("MEMBER-001", "존재하지 않는 유저입니다."),
     UPDATE_PHONE_NUMBER_SUCCESS("MEMBER-002", "휴대폰 번호 업데이트를 성공헀습니다"),
+    UPDATE_NICKNAME_SUCCESS("MEMBER-003","닉네임 변경에 성공했습니다."),
+    MEMBER_ALREADY_EXISTS("MEMBER-004", "이미 존재하는 유저입니다"),
+    INVALID_ACCOUNT_INFO("MEMBER-005", "올바르지 않은 계좌 정보입니다"),
 
     /**
      * auth
@@ -105,7 +108,6 @@ public enum ResponseMessages {
      * my page
      */
     GET_MY_PAGE_SUCCESS("MYPAGE-001","마이페이지 조회를 성공했습니다."),
-    UPDATE_NICKNAME_SUCCESS("MEMBER-003","닉네임 변경에 성공했습니다."),
     UPDATE_INVESTMENT_TYPE_SUCCESS("MYPAGE-004","투자 성향이 성공적으로 변경되었습니다.");
 
     // 도메인 추가해주세요

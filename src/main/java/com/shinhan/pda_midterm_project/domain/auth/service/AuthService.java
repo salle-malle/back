@@ -5,6 +5,6 @@ import org.springframework.http.ResponseCookie;
 public interface AuthService {
     ResponseCookie login(String id, String password);
 
-    ResponseCookie signUp(String id, String password, String phoneNumber, String appKey, String appSecret,
+    ResponseCookie signUp(String name, String nickname, String id, String password, String phoneNumber, String appKey, String appSecret,
                           String accountNumber);
 }

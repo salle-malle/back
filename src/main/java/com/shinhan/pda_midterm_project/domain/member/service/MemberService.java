@@ -17,4 +17,6 @@ public interface MemberService {
     void fetchAndSaveMemberStocks(Member member);
 
     void updateNickname(Long aLong, String nickname);
+
+    void checkMemberIdDuplicated(String memberId);
 }

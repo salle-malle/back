@@ -15,4 +15,10 @@ public class MemberDto {
             return new PhoneNumber(phoneNumber);
         }
     }
+
+    public record MemberId(
+            @NotBlank(message = "휴대폰 번호는 공백이 될 수 없습니다.")
+            String memberId
+    ) {
+    }
 }
