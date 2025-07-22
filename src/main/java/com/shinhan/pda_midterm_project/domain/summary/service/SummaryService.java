@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +57,7 @@ public class SummaryService {
     }
 
     @Transactional
-    protected Summary summarizeAndSave(String content, Stock stock) {
+    protected Summary summarizeAndSave(String content, Stock stock, String imageUrl) {
         String summaryText = summarize(content);
 
         // 1. Summary 저장
@@ -64,6 +65,7 @@ public class SummaryService {
                 Summary.builder()
                         .stock(stock)
                         .newsContent(summaryText)
+                        .newsImage(imageUrl)
                         .build()
         );
 
@@ -190,8 +192,14 @@ public class SummaryService {
                     .map(News::getNewsContent)
                     .collect(Collectors.joining("\n\n"));
 
+            String representativeImageUrl = newsList.stream()
+                    .map(News::getNewsImage)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
+
             // 요약 및 저장
-            summarizeAndSave(combinedContent, stock);
+            summarizeAndSave(combinedContent, stock, representativeImageUrl);
         }
     }
 
