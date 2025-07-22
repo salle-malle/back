@@ -4,6 +4,7 @@ package com.shinhan.pda_midterm_project.presentation.member.controller;
 import static com.shinhan.pda_midterm_project.common.response.ResponseMessages.GET_MY_PAGE_SUCCESS;
 
 import com.shinhan.pda_midterm_project.common.annotation.Auth;
+import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
@@ -28,6 +29,7 @@ public class MyPageController {
     private final MyPageService myPageService;
     private final MemberService memberService;
 
+    @MemberOnly
     @GetMapping
     public Response<MyPageResponse> getMyPageInfo(@Auth Accessor accessor) {
         MyPageResponse response = myPageService.getMyPageInfo(accessor.memberId());
@@ -38,6 +40,7 @@ public class MyPageController {
         );
     }
 
+    @MemberOnly
     @PatchMapping("/nickname")
     public Response<Void> updateNickname(@Auth Accessor accessor,
                                          @Valid @RequestBody UpdateNicknameRequest request) {
@@ -48,6 +51,7 @@ public class MyPageController {
         );
     }
 
+    @MemberOnly
     @PatchMapping("/investment-type")
     public Response<Void> updateInvestmentType(
             @Auth Accessor accessor,
@@ -59,5 +63,4 @@ public class MyPageController {
                 ResponseMessages.UPDATE_INVESTMENT_TYPE_SUCCESS.getMessage()
         );
     }
-
 }
