@@ -95,6 +95,11 @@ public enum ResponseMessages {
      */
     GET_CURRENT_MAIN_NEWS_SUCCESS("MAINNEWS-001", "최근 증시 뉴스 조회를 성공했습니다."),
 
+    /**
+     * notification
+     */
+    MARK_NOTIFICATION_AS_READ_SUCCESS("NOTI-001", "알림 읽음 처리에 성공했습니다."),
+
     /*
      * my page
      */

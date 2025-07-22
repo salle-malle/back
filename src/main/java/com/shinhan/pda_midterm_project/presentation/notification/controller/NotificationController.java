@@ -2,6 +2,7 @@ package com.shinhan.pda_midterm_project.presentation.notification.controller;
 
 import com.shinhan.pda_midterm_project.common.annotation.Auth;
 import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
+import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
 import com.shinhan.pda_midterm_project.common.response.Response;
@@ -40,6 +41,18 @@ public class NotificationController {
         Long memberId = accessor.memberId();
         List<NotificationResponseDto> result = notificationService.getByMemberId(memberId);
         return ResponseEntity.ok(Response.success("200", "알림 조회 성공", result));
+    }
+
+    @PatchMapping("/{notificationId}/read")
+    @MemberOnly
+    public ResponseEntity<Response<Object>> markAsRead(@Auth Accessor accessor,
+                                                       @PathVariable Long notificationId) {
+        Long memberId = accessor.memberId();
+        notificationService.markAsRead(notificationId, memberId);
+        return ResponseEntity.ok(Response.success(
+                ResponseMessages.MARK_NOTIFICATION_AS_READ_SUCCESS.getCode(),
+                ResponseMessages.MARK_NOTIFICATION_AS_READ_SUCCESS.getMessage()
+        ));
     }
 
     /**
