@@ -37,4 +37,12 @@ public interface MemberStockSnapshotRepository extends JpaRepository<MemberStock
             "WHERE mss.member.id = :memberId",
             countQuery = "SELECT COUNT(mss) FROM MemberStockSnapshot mss WHERE mss.member.id = :memberId")
     Page<MemberStockSnapshot> findCardsByMemberId(@Param("memberId") Long memberId, Pageable pageable);
+
+
+    @Query("SELECT mss FROM MemberStockSnapshot mss " +
+            "JOIN FETCH mss.investmentTypeNewsComment itnc " +
+            "JOIN FETCH itnc.summary s " +
+            "JOIN FETCH s.stock " +
+            "WHERE mss.member.id = :memberId AND CAST(mss.createdAt AS date) = :date")
+    List<MemberStockSnapshot> findCardsByMemberIdAndDate(@Param("memberId") Long memberId, @Param("date") java.sql.Date date);
 }

@@ -22,7 +22,7 @@ public class MemberStockSnapshotDetailResponseDto {
     // News 정보 (Summary -> News)
     private final String newsContent;
 //    private final String newsTitle;
-//    private final String newsSourceUrl;
+    private final String newsImage;
 //    private final LocalDateTime newsPublishedAt;
 
     public MemberStockSnapshotDetailResponseDto(MemberStockSnapshot snapshot) {
@@ -47,6 +47,7 @@ public class MemberStockSnapshotDetailResponseDto {
         // ERD 경로: Summary -> News
 
         this.newsContent = summary.getNewsContent();
+        this.newsImage = summary.getNewsImage();
 //        this.newsTitle = summary.getNewsContent();
 //        this.newsSourceUrl = summary.get();
 //        this.newsPublishedAt = news.getNewsDate();

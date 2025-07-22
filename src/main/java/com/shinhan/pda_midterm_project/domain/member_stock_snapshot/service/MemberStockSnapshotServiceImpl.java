@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,5 +35,11 @@ public class MemberStockSnapshotServiceImpl implements MemberStockSnapshotServic
     public Page<MemberStockSnapshotDetailResponseDto> getSnapshotList(Long memberId, Pageable pageable) {
         Page<MemberStockSnapshot> snapshotPage = memberStockSnapshotRepository.findCardsByMemberId(memberId, pageable);
         return snapshotPage.map(MemberStockSnapshotDetailResponseDto::new);
+    }
+
+    @Override
+    public List<MemberStockSnapshotDetailResponseDto> getSnapshotsByDate(Long memberId, java.sql.Date date) {
+        List<MemberStockSnapshot> snapshots = memberStockSnapshotRepository.findCardsByMemberIdAndDate(memberId, date);
+        return snapshots.stream().map(MemberStockSnapshotDetailResponseDto::new).toList();
     }
 }

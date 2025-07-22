@@ -11,10 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.shinhan.pda_midterm_project.common.response.ResponseMessages.GET_CARD_DETAIL_SUCCESS;
 import static com.shinhan.pda_midterm_project.common.response.ResponseMessages.GET_CARD_LIST_SUCCESS;
@@ -46,5 +45,18 @@ public class MemberStockSnapshotController {
 
         MemberStockSnapshotDetailResponseDto snapshotDetail = memberStockSnapshotService.getSnapshotDetail(accessor.memberId(), snapshotId);
         return ResponseEntity.ok().body(Response.success(GET_CARD_DETAIL_SUCCESS.getCode(), GET_CARD_DETAIL_SUCCESS.getMessage(), snapshotDetail));
+    }
+
+    // MemberStockSnapshotController.java
+
+    @GetMapping("/by-date")
+    @MemberOnly
+    public ResponseEntity<Response<List<MemberStockSnapshotDetailResponseDto>>> getSnapshotsByDate(
+            @Auth Accessor accessor,
+            @RequestParam("date") String date // yyyy-MM-dd
+    ) {
+        java.sql.Date sqlDate = java.sql.Date.valueOf(date);
+        List<MemberStockSnapshotDetailResponseDto> snapshots = memberStockSnapshotService.getSnapshotsByDate(accessor.memberId(), sqlDate);
+        return ResponseEntity.ok().body(Response.success("GET_CARD_BY_DATE", "해당 날짜의 카드 목록 조회 성공", snapshots));
     }
 }
