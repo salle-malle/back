@@ -13,6 +13,7 @@ public enum ResponseMessages {
     UPDATE_PHONE_NUMBER_SUCCESS("MEMBER-002", "휴대폰 번호 업데이트를 성공헀습니다"),
     UPDATE_NICKNAME_SUCCESS("MEMBER-003","닉네임 변경에 성공했습니다."),
     MEMBER_ALREADY_EXISTS("MEMBER-004", "이미 존재하는 유저입니다"),
+    INVALID_ACCOUNT_INFO("MEMBER-005", "올바르지 않은 계좌 정보입니다"),
 
     /**
      * auth
