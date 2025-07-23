@@ -11,7 +11,7 @@ public enum ResponseMessages {
      */
     MEMBER_NOT_FOUND("MEMBER-001", "존재하지 않는 유저입니다."),
     UPDATE_PHONE_NUMBER_SUCCESS("MEMBER-002", "휴대폰 번호 업데이트를 성공헀습니다"),
-    UPDATE_NICKNAME_SUCCESS("MEMBER-003","닉네임 변경에 성공했습니다."),
+    UPDATE_NICKNAME_SUCCESS("MEMBER-003", "닉네임 변경에 성공했습니다."),
     MEMBER_ALREADY_EXISTS("MEMBER-004", "이미 존재하는 유저입니다"),
     INVALID_ACCOUNT_INFO("MEMBER-005", "올바르지 않은 계좌 정보입니다"),
 
@@ -50,22 +50,11 @@ public enum ResponseMessages {
     /**
      * earning call
      */
-    EARNING_CALL_UPLOAD_SUCCESS("EARNING-001", "어닝콜 데이터 업로드를 성공했습니다."),
-    EARNING_CALL_UPLOAD_FAIL("EARNING-002", "어닝콜 데이터 업로드 중 오류가 발생했습니다."),
-    EARNING_CALL_GET_ALL_SUCCESS("EARNING-003", "어닝콜 데이터 조회를 성공했습니다."),
-    EARNING_CALL_GET_BY_STOCK_SUCCESS("EARNING-004", "특정 주식의 어닝콜 데이터 조회를 성공했습니다."),
-    EARNING_CALL_GET_BY_DATE_SUCCESS("EARNING-005", "특정 날짜의 어닝콜 데이터 조회를 성공했습니다."),
-    EARNING_CALL_GET_FAIL("EARNING-006", "어닝콜 데이터 조회 중 오류가 발생했습니다."),
-    EARNING_CALL_CSV_PARSE_ERROR("EARNING-007", "CSV 파일 파싱 중 오류가 발생했습니다."),
-    EARNING_CALL_STOCK_NOT_FOUND("EARNING-008", "해당 주식 정보를 찾을 수 없습니다."),
-    EARNING_CALL_FILE_EMPTY("EARNING-009", "업로드된 파일이 비어있습니다."),
-    EARNING_CALL_FILE_FORMAT_ERROR("EARNING-010", "지원하지 않는 파일 형식입니다. CSV 파일만 업로드 가능합니다."),
-    EARNING_CALL_DATA_SAVE_SUCCESS("EARNING-011", "어닝콜 데이터가 성공적으로 저장되었습니다."),
-    EARNING_CALL_DATA_SAVE_FAIL("EARNING-012", "어닝콜 데이터 저장 중 오류가 발생했습니다."),
-    EARNING_CALL_NO_DATA_FOUND("EARNING-013", "조회된 어닝콜 데이터가 없습니다."),
-    EARNING_CALL_GET_BY_MEMBER_SUCCESS("EARNING-014", "사용자 보유종목의 어닝콜 데이터 조회를 성공했습니다."),
-    EARNING_CALL_MEMBER_NOT_FOUND("EARNING-015", "사용자 정보를 찾을 수 없습니다."),
-    EARNING_CALL_MEMBER_NO_STOCKS("EARNING-016", "사용자의 보유종목이 없습니다."),
+    EARNING_CALL_GET_ALL_SUCCESS("EARNING-001", "어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_GET_BY_STOCK_SUCCESS("EARNING-002", "특정 주식의 어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_GET_BY_DATE_SUCCESS("EARNING-003", "특정 날짜의 어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_GET_BY_MEMBER_SUCCESS("EARNING-004", "사용자 보유종목의 어닝콜 데이터 조회를 성공했습니다."),
+    EARNING_CALL_GET_FAIL("EARNING-005", "어닝콜 데이터 조회 중 오류가 발생했습니다."),
 
     /**
      * stock
@@ -107,8 +96,8 @@ public enum ResponseMessages {
     /*
      * my page
      */
-    GET_MY_PAGE_SUCCESS("MYPAGE-001","마이페이지 조회를 성공했습니다."),
-    UPDATE_INVESTMENT_TYPE_SUCCESS("MYPAGE-004","투자 성향이 성공적으로 변경되었습니다.");
+    GET_MY_PAGE_SUCCESS("MYPAGE-001", "마이페이지 조회를 성공했습니다."),
+    UPDATE_INVESTMENT_TYPE_SUCCESS("MYPAGE-004", "투자 성향이 성공적으로 변경되었습니다.");
 
     // 도메인 추가해주세요
     private final String code;
