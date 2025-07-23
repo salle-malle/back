@@ -1,12 +1,17 @@
 name: backend-cd-prod
 
 on:
-  push:
+  pull_request:
     branches:
-      - feat/cd
+      - main
+    types:
+      - closed
 
 jobs:
   build-and-push:
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     env:
       TZ: 'Asia/Seoul'
