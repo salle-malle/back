@@ -39,9 +39,10 @@ spring:
 
   batch:
     jdbc:
-      initialize-schema: always # 또는 필요 시 'embedded'
+      initialize-schema: always
     job:
-      enabled: true
+      enabled: false
+      names: mainNewsCrawlingJob,disclosureJob,newsCrawlingJob,sampleJob,notificationSendJob
     job-repository:
       incrementer-class: org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer
 
@@ -59,5 +60,3 @@ server:
 data-server:
   url: http://localhost:8000
 
-openai:
-  api-key: ${OPENAI_API_KEY}
