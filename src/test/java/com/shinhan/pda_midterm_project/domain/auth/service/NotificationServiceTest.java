@@ -1,6 +1,7 @@
 package com.shinhan.pda_midterm_project.domain.auth.service;
 
 import com.shinhan.pda_midterm_project.common.util.SseEmitterRepository;
+import com.shinhan.pda_midterm_project.domain.member.repository.MemberRepository;
 import com.shinhan.pda_midterm_project.domain.notification.repository.NotificationRepository;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
 import java.util.Set;
@@ -15,12 +16,13 @@ class NotificationServiceTest {
     private NotificationService notificationService;
     private SseEmitterRepository emitterRepository;
     private NotificationRepository notificationRepository;
+    private MemberRepository memberRepository;
 
     @BeforeEach
     void setUp() {
         emitterRepository = new SseEmitterRepository();
         notificationRepository = mock(NotificationRepository.class);
-        notificationService = new NotificationService(emitterRepository, notificationRepository);
+        notificationService = new NotificationService(emitterRepository, notificationRepository, memberRepository);
     }
 
     @Test
