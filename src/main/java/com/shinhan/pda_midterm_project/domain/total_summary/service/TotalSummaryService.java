@@ -10,6 +10,7 @@ import com.shinhan.pda_midterm_project.domain.member.repository.MemberRepository
 import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.model.MemberStockSnapshot;
 import com.shinhan.pda_midterm_project.domain.member_stock_snapshot.repository.MemberStockSnapshotRepository;
 import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
+import com.shinhan.pda_midterm_project.domain.notification.model.NotificationType;
 import com.shinhan.pda_midterm_project.domain.notification.repository.NotificationRepository;
 import com.shinhan.pda_midterm_project.domain.total_summary.model.TotalSummary;
 import com.shinhan.pda_midterm_project.domain.total_summary.repository.TotalSummaryRepository;
@@ -88,6 +89,7 @@ public class TotalSummaryService {
                     .notificationContent(content)
 //                    .notificationUrl("/total-summary")
                     .notificationIsRead(false)
+                    .notificationType(NotificationType.SUMMARY_COMPLETE)
                     .build();
 
             notificationRepository.save(notification);

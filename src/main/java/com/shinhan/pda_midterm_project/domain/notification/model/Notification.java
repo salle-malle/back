@@ -1,9 +1,7 @@
 package com.shinhan.pda_midterm_project.domain.notification.model;
 
 import com.shinhan.pda_midterm_project.common.util.BaseEntity;
-import com.shinhan.pda_midterm_project.domain.investment_type.model.InvestmentType;
 import com.shinhan.pda_midterm_project.domain.member.model.Member;
-import com.shinhan.pda_midterm_project.domain.notification.model.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +31,10 @@ public class Notification extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String notificationUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private NotificationType notificationType;
 
     public void markAsRead() {
         this.notificationIsRead = true;
