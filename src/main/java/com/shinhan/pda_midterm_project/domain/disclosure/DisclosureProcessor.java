@@ -29,7 +29,7 @@ public class DisclosureProcessor implements ItemProcessor<Stock, Disclosure> {
             DisclosureRequestDto request = DisclosureRequestDto.create(
                     stock.getStockId(), LocalDate.now(clock).minusDays(1).toString(), LocalDate.now(clock).toString());
 
-            DisclosureResponseDto response = fastApiClient.requestTodayDisclosure(request);
+            DisclosureResponseDto response = fastApiClient.requestDisclosure(request);
             System.out.println(response.results());
             if (response.results().isEmpty()) {
                 index = 0;

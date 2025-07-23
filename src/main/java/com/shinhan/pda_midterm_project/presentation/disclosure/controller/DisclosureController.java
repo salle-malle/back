@@ -2,6 +2,7 @@ package com.shinhan.pda_midterm_project.presentation.disclosure.controller;
 
 import com.shinhan.pda_midterm_project.common.annotation.Auth;
 import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
+import com.shinhan.pda_midterm_project.common.config.DisclosureInitBatch;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DisclosureController {
     private final DisclosureService disclosureService;
+    private final DisclosureInitBatch disclosureInitBatch;
 
     @MemberOnly
     @GetMapping("/my-current-disclosure")
@@ -32,6 +34,18 @@ public class DisclosureController {
                         ResponseMessages.GET_MY_CURRENT_DISCLOSURE_SUCCESS.getCode(),
                         ResponseMessages.GET_MY_CURRENT_DISCLOSURE_SUCCESS.getMessage(),
                         myCurrentDisclosure
+                ));
+    }
+
+    @GetMapping("/init")
+    public ResponseEntity<Response<List<String>>> disclosureInit() {
+        disclosureInitBatch.runDisclosureBatch();
+
+        return ResponseEntity
+                .ok()
+                .body(Response.success(
+                        ResponseMessages.SUCCESS.getCode(),
+                        ResponseMessages.SUCCESS.getMessage()
                 ));
     }
 }

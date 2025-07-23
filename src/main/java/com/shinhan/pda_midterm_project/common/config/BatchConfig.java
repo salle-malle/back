@@ -111,10 +111,10 @@ public class BatchConfig {
 
     @Bean
     public Step notificationSendStep(JobRepository jobRepository,
-                           PlatformTransactionManager transactionManager,
-                           ListItemReader<Long> memberIdReader,
-                           ItemProcessor<Long, List<Notification>> notificationProcessor,
-                           ItemWriter<List<Notification>> notificationWriter) {
+                                     PlatformTransactionManager transactionManager,
+                                     ListItemReader<Long> memberIdReader,
+                                     ItemProcessor<Long, List<Notification>> notificationProcessor,
+                                     ItemWriter<List<Notification>> notificationWriter) {
 
         return new StepBuilder("notificationSendStep", jobRepository)
                 .<Long, List<Notification>>chunk(5, transactionManager) // 일단 테스트 수준에서 5명씩 처리
