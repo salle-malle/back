@@ -68,6 +68,7 @@ public class NewsCrawlingTasklet implements Tasklet {
                             .newsContent(article.getNewsContent())
                             .newsUri(article.getNewsUri())
                             .newsDate(article.getNewsDate())
+                            .newsImage(article.getNewsImage())
                             .build());
                 }
             }
