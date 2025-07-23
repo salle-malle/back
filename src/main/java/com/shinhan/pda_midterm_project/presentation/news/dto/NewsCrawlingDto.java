@@ -40,6 +40,7 @@ public class NewsCrawlingDto {
         private String newsContent;
         private String newsUri;
         private String newsDate;
+        private String newsImage;
     }
 
     @Getter
