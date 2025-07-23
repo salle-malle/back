@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findAllByCreatedAtBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    // 종목코드로 뉴스 조회 (최신순으로 정렬)
+    List<News> findByStock_StockIdOrderByCreatedAtDesc(String stockId);
 }
