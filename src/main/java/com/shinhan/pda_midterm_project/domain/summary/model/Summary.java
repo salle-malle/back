@@ -21,4 +21,7 @@ public class Summary extends BaseEntity {
 
   @Column(columnDefinition = "TEXT")
   private String newsContent;
+
+  @Column(columnDefinition = "TEXT")
+  private String newsImage;
 }

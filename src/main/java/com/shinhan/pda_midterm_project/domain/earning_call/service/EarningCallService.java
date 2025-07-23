@@ -7,28 +7,33 @@ import java.util.List;
 
 public interface EarningCallService {
 
-  /**
-   * CSV 파일을 파싱하여 어닝콜 데이터를 데이터베이스에 저장
-   */
-  void parseAndSaveEarningCalls(MultipartFile csvFile);
+    /**
+     * CSV 파일을 파싱하여 어닝콜 데이터를 데이터베이스에 저장
+     */
+    void parseAndSaveEarningCalls(MultipartFile csvFile);
 
-  /**
-   * 모든 어닝콜 데이터 조회
-   */
-  List<EarningCall> getAllEarningCalls();
+    /**
+     * 모든 어닝콜 데이터 조회
+     */
+    List<EarningCall> getAllEarningCalls();
 
-  /**
-   * 특정 주식의 어닝콜 데이터 조회
-   */
-  List<EarningCall> getEarningCallsByStockId(String stockId);
+    /**
+     * 특정 주식의 어닝콜 데이터 조회
+     */
+    List<EarningCall> getEarningCallsByStockId(String stockId);
 
-  /**
-   * 특정 날짜의 어닝콜 데이터 조회
-   */
-  List<EarningCall> getEarningCallsByDate(String date);
+    /**
+     * 특정 날짜의 어닝콜 데이터 조회
+     */
+    List<EarningCall> getEarningCallsByDate(String date);
 
-  /**
-   * 사용자 보유종목의 어닝콜 데이터 조회
-   */
-  List<EarningCall> getEarningCallsByMemberId(Long memberId);
+    /**
+     * 사용자 보유종목의 어닝콜 데이터 조회
+     */
+    List<EarningCall> getEarningCallsByMemberId(Long memberId);
+
+    /**
+     * 사용자 보유 종목의 어닝콜 데이터 중, 다가올 어닝콜들 조회
+     */
+    List<EarningCall> getUpcomingEarningCall(Long memberId);
 }

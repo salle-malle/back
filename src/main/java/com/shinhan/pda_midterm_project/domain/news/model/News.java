@@ -29,5 +29,8 @@ public class News extends BaseEntity {
   private String newsUri;
 
   @Column(columnDefinition = "TEXT")
+  private String newsImage;
+
+  @Column(columnDefinition = "TEXT")
   private String newsDate;
 }

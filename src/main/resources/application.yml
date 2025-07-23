@@ -17,10 +17,10 @@ spring:
       path: /h2-console
 
   datasource:
-    url: jdbc:h2:file:~/testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: ${DB_URL}
+    username: ${DB_USER_NAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
 
   jpa:
     hibernate:
@@ -34,6 +34,7 @@ spring:
     include:
       - jwt
       - coolSMS
+      - openai
   batch:
     job:
       enabled: false
@@ -52,3 +53,6 @@ server:
 
 data-server:
   url: http://localhost:8000
+
+openai:
+  api-key: ${OPENAI_API_KEY}

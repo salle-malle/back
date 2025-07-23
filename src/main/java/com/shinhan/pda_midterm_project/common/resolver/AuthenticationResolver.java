@@ -42,7 +42,7 @@ public class AuthenticationResolver implements HandlerMethodArgumentResolver {
 
             Long memberId = Long.valueOf(tokenProvider.getSubject(accessTokenValue));
             return Accessor.member(memberId);
-        } catch (TokenException e) {
+        } catch (Exception e) {
             return Accessor.guest();
         }
     }

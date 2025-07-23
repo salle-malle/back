@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Member extends BaseEntity {
 
     @Id
@@ -41,6 +41,9 @@ public class Member extends BaseEntity {
 
     @Column(length = 255)
     private String memberNickname;
+
+    @Column(length = 255)
+    private String memberName;
 
     @Column(length = 20)
     private String memberPhone;
@@ -81,13 +84,22 @@ public class Member extends BaseEntity {
         this.memberAccountNumber = memberAccountNumber;
     }
 
-    // TODO: 나중에 erd 확정 후 추가 : 기본적인 예시용
-    public static Member create(String memberId, String memberPassword, String memberPhone) {
-
+    public static Member create(String memberId, String memberName, String memberPassword,
+                                String memberPhone, String memberNickname, String memberAccountNumber,
+                                String memberAppKey, String memberAppSecret) {
         return Member.builder()
                 .memberId(memberId)
                 .memberPassword(memberPassword)
                 .memberPhone(memberPhone)
+                .memberNickname(memberNickname)
+                .memberAccountNumber(memberAccountNumber)
+                .memberAppKey(memberAppKey)
+                .memberAppSecret(memberAppSecret)
+                .memberName(memberName)
                 .build();
+    }
+
+    public void updateInvestmentType(InvestmentType investmentType) {
+        this.investmentType = investmentType;
     }
 }

@@ -3,6 +3,8 @@ package com.shinhan.pda_midterm_project.common.handler;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.domain.auth.exception.AuthException;
 import com.shinhan.pda_midterm_project.domain.member.exception.MemberException;
+import com.shinhan.pda_midterm_project.domain.member_stock.exception.MemberStockException;
+import com.shinhan.pda_midterm_project.domain.member_stock.model.MemberStock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,6 +36,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Response<String>> handleAuthException(AuthException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(Response.failure(ex.getCode(), ex.getMessage()));
+    }
+
+    @ExceptionHandler(MemberStockException.class)
+    public ResponseEntity<Response<String>> handleMemberStockException(MemberStockException ex) {
         return ResponseEntity
                 .badRequest()
                 .body(Response.failure(ex.getCode(), ex.getMessage()));

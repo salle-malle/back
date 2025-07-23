@@ -145,5 +145,10 @@ public class KisStockDetailResponse {
 
     @JsonProperty("etyp_nm")
     private String etypNm; // 종목명
+
+    // etypNm setter 추가
+    public void setEtypNm(String etypNm) {
+      this.etypNm = etypNm;
+    }
   }
 }

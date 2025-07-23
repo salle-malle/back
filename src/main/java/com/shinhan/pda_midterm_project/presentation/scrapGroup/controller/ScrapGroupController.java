@@ -5,9 +5,7 @@ import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.scrap_group.service.ScrapGroupService;
-import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.ScrapGroupDeleteRequestDto;
-import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.ScrapGroupNameRequestDto;
-import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.ScrapGroupResponseDto; // ✅ DTO import
+import com.shinhan.pda_midterm_project.presentation.scrapGroup.dto.*;
 import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedPushRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +21,12 @@ import static com.shinhan.pda_midterm_project.common.response.ResponseMessages.*
 public class ScrapGroupController {
     private final ScrapGroupService scrapGroupService;
 
-    @GetMapping("")
+    @GetMapping("")//OK
     @MemberOnly
-    public ResponseEntity<Response<List<ScrapGroupResponseDto>>> getScrapGroup(@Auth Accessor accessor) { // ✅ 응답 타입을 DTO 리스트로 변경
-        // 1. 사용자 ID를 2L로 고정
+    public ResponseEntity<Response<List<ScrapGroupResponseDto>>> getScrapGroup(@Auth Accessor accessor) {
         Long memberId = accessor.memberId();
-
-        // 2. Service를 호출하여 스크랩 그룹 목록 조회
         List<ScrapGroupResponseDto> scrapGroups = scrapGroupService.getScrapGroup(memberId);
 
-        // 3. 성공 응답 반환
         return ResponseEntity
                 .ok()
                 .body(Response.success(
@@ -42,17 +36,15 @@ public class ScrapGroupController {
                 ));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/push")//OK
     @MemberOnly
-    public ResponseEntity<Response<ScrapGroupResponseDto>> createScrapGroup(@Auth Accessor accessor) { // ✅ 응답 타입을 DTO 리스트로 변경
-        // 1. 사용자 ID를 2L로 고정
-        Long memberId = accessor.memberId();
-        String scrapGroupTitle = "title";
+    public ResponseEntity<Response<ScrapGroupResponseDto>> createScrapGroup(@Auth Accessor accessor,
+                                                                            @RequestBody ScrapGroupCreateRequestDto requestDto) {
 
-        // 2. Service를 호출하여 스크랩 그룹 목록 추가
+        Long memberId = accessor.memberId();
+        String scrapGroupTitle = requestDto.getScrapGroupName();
         ScrapGroupResponseDto scrapGroups = scrapGroupService.createScrapGroup(memberId, scrapGroupTitle);
 
-        // 3. 성공 응답 반환
         return ResponseEntity
                 .ok()
                 .body(Response.success(
@@ -62,11 +54,11 @@ public class ScrapGroupController {
                 ));
     }
 
-    @PutMapping("/groupnameupdate")
-    public ResponseEntity<Response<ScrapGroupResponseDto>> updateScrapGroupName(
+    @PutMapping("/groupnameupdate")//OK
+    public ResponseEntity<Response<ScrapGroupResponseDto>> updateScrapGroupName(@Auth Accessor accessor,
             @RequestBody ScrapGroupNameRequestDto requestDto)
      {
-        ScrapGroupResponseDto scrapGroups = scrapGroupService.updateScrapGroup(requestDto.getScrapGroupId(), requestDto.getScrapGroupName());
+        ScrapGroupResponseDto scrapGroups = scrapGroupService.updateScrapGroup(requestDto.getScrapGroupId(), requestDto.getScrapGroupId(),requestDto.getScrapGroupName());
 
         return ResponseEntity
                 .ok()
@@ -77,7 +69,7 @@ public class ScrapGroupController {
                 ));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete")//OK
     @MemberOnly
     public ResponseEntity<Response<ScrapGroupResponseDto>> deleteScrapGroup(@Auth Accessor accessor,
             @RequestBody ScrapGroupDeleteRequestDto requestDto)
@@ -92,5 +84,17 @@ public class ScrapGroupController {
                         DELETE_SCRAP_GROUP_SUCCESS.getMessage(),
                         scrapGroups
                 ));
+    }
+
+    @GetMapping("/status/{scrapId}")//OK
+    @MemberOnly
+    public ResponseEntity<Response<List<GroupInclusionStatusDto>>> getGroupStatusForScrap(
+            @Auth Accessor accessor,
+            @PathVariable Long scrapId) {
+
+        Long memberId = accessor.memberId();
+        List<GroupInclusionStatusDto> groupStatusList = scrapGroupService.getGroupInclusionStatus(memberId, scrapId);
+
+        return ResponseEntity.ok().body(Response.success(GET_SCRAP_GROUP_STATUS_SUCCESS.getCode(), GET_SCRAP_GROUP_STATUS_SUCCESS.getMessage() ,groupStatusList));
     }
 }

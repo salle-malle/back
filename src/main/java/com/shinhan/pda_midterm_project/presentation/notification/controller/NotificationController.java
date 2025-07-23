@@ -1,7 +1,17 @@
 package com.shinhan.pda_midterm_project.presentation.notification.controller;
 
+import com.shinhan.pda_midterm_project.common.annotation.Auth;
+import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
+import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.notification.service.NotificationService;
+import com.shinhan.pda_midterm_project.common.response.Response;
+
+import com.shinhan.pda_midterm_project.presentation.notification.dto.NotificationResponseDto;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -17,12 +27,43 @@ public class NotificationController {
      * 클라이언트가 SSE 연결을 요청할 때 호출되는 엔드포인트
      * 로그인 구현 후 memberId 추출 방식만 바꾸면 될듯
      *
-     * @param memberId 클라이언트의 회원 ID
      * @return SseEmitter (서버 → 클라이언트 실시간 통로)
      */
     @GetMapping("/stream")
-    public SseEmitter connect(@RequestParam Long memberId) {
+    @MemberOnly
+    public SseEmitter connect(@Auth Accessor accessor) {
+        Long memberId = accessor.memberId();
         return notificationService.connect(memberId);
+    }
+
+    @GetMapping
+    @MemberOnly
+    public ResponseEntity<Response<Object>> getMemberNotifications(@Auth Accessor accessor) {
+        Long memberId = accessor.memberId();
+        List<NotificationResponseDto> result = notificationService.getByMemberId(memberId);
+        return ResponseEntity.ok(Response.success("200", "알림 조회 성공", result));
+    }
+
+    @PatchMapping("/{notificationId}/read")
+    @MemberOnly
+    public ResponseEntity<Response<Object>> markAsRead(@Auth Accessor accessor,
+                                                       @PathVariable Long notificationId) {
+        Long memberId = accessor.memberId();
+        notificationService.markAsRead(notificationId, memberId);
+        return ResponseEntity.ok(Response.success(
+                ResponseMessages.MARK_NOTIFICATION_AS_READ_SUCCESS.getCode(),
+                ResponseMessages.MARK_NOTIFICATION_AS_READ_SUCCESS.getMessage()
+        ));
+    }
+
+    @GetMapping("/unread-exists")
+    public ResponseEntity<?> hasUnreadNotifications(@Auth Accessor accessor) {
+        boolean hasUnread = notificationService.hasUnreadNotifications(accessor.memberId());
+        return ResponseEntity.ok(Response.success(
+                ResponseMessages.HAS_UNREAD_NOTIFICATION_SUCCESS.getCode(),
+                ResponseMessages.HAS_UNREAD_NOTIFICATION_SUCCESS.getMessage(),
+                Map.of("hasUnread", hasUnread)
+        ));
     }
 
     /**
