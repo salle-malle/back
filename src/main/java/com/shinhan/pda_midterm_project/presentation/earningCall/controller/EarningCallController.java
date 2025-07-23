@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,26 +23,6 @@ import java.util.stream.Collectors;
 public class EarningCallController {
 
     private final EarningCallService earningCallService;
-
-    /**
-     * CSV 파일을 업로드하여 어닝콜 데이터를 파싱하고 저장
-     */
-    @PostMapping("/upload")
-    public ResponseEntity<Response<String>> uploadEarningCalls(@RequestParam("file") MultipartFile file) {
-        try {
-            earningCallService.parseAndSaveEarningCalls(file);
-            return ResponseEntity.ok(Response.success(
-                    ResponseMessages.EARNING_CALL_UPLOAD_SUCCESS.getCode(),
-                    ResponseMessages.EARNING_CALL_UPLOAD_SUCCESS.getMessage(),
-                    null));
-        } catch (Exception e) {
-            log.error("Error uploading earning calls", e);
-            return ResponseEntity.badRequest()
-                    .body(Response.failure(
-                            ResponseMessages.EARNING_CALL_UPLOAD_FAIL.getCode(),
-                            ResponseMessages.EARNING_CALL_UPLOAD_FAIL.getMessage() + ": " + e.getMessage()));
-        }
-    }
 
     /**
      * 모든 어닝콜 데이터 조회
@@ -65,7 +44,8 @@ public class EarningCallController {
             return ResponseEntity.badRequest()
                     .body(Response.failure(
                             ResponseMessages.EARNING_CALL_GET_FAIL.getCode(),
-                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": " + e.getMessage()));
+                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": "
+                                    + e.getMessage()));
         }
     }
 
@@ -90,7 +70,8 @@ public class EarningCallController {
             return ResponseEntity.badRequest()
                     .body(Response.failure(
                             ResponseMessages.EARNING_CALL_GET_FAIL.getCode(),
-                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": " + e.getMessage()));
+                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": "
+                                    + e.getMessage()));
         }
     }
 
@@ -114,18 +95,21 @@ public class EarningCallController {
             return ResponseEntity.badRequest()
                     .body(Response.failure(
                             ResponseMessages.EARNING_CALL_GET_FAIL.getCode(),
-                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": " + e.getMessage()));
+                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": "
+                                    + e.getMessage()));
         }
     }
-  
+
     /**
      * 사용자 보유종목의 어닝콜 데이터 조회
      */
     @GetMapping("/member")
     @MemberOnly
-    public ResponseEntity<Response<List<EarningCallResponseDto>>> getEarningCallsByMemberId(@Auth Accessor accessor) {
+    public ResponseEntity<Response<List<EarningCallResponseDto>>> getEarningCallsByMemberId(
+            @Auth Accessor accessor) {
         try {
-            List<EarningCall> earningCalls = earningCallService.getEarningCallsByMemberId(accessor.memberId());
+            List<EarningCall> earningCalls = earningCallService
+                    .getEarningCallsByMemberId(accessor.memberId());
             List<EarningCallResponseDto> responseDtos = earningCalls.stream()
                     .map(EarningCallResponseDto::from)
                     .collect(Collectors.toList());
@@ -139,23 +123,34 @@ public class EarningCallController {
             return ResponseEntity.badRequest()
                     .body(Response.failure(
                             ResponseMessages.EARNING_CALL_GET_FAIL.getCode(),
-                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": " + e.getMessage()));
+                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": "
+                                    + e.getMessage()));
         }
     }
 
-    @MemberOnly
+    /**
+     * 사용자 보유 종목의 다가올 어닝콜 데이터 조회
+     */
     @GetMapping("/member/upcoming")
-    public ResponseEntity<Response<List<EarningCallResponseDto>>> getUpcomingEvent(
-            @Auth Accessor accessor) {
-        Long memberId = accessor.memberId();
-        List<EarningCall> earningCalls = earningCallService.getUpcomingEarningCall(memberId);
-        List<EarningCallResponseDto> responseDtos = earningCalls.stream()
-                .map(EarningCallResponseDto::from)
-                .collect(Collectors.toList());
+    @MemberOnly
+    public ResponseEntity<Response<List<EarningCallResponseDto>>> getUpcomingEarningCalls(@Auth Accessor accessor) {
+        try {
+            List<EarningCall> earningCalls = earningCallService.getUpcomingEarningCall(accessor.memberId());
+            List<EarningCallResponseDto> responseDtos = earningCalls.stream()
+                    .map(EarningCallResponseDto::from)
+                    .collect(Collectors.toList());
 
-        return ResponseEntity.ok(Response.success(
-                ResponseMessages.EARNING_CALL_GET_BY_MEMBER_SUCCESS.getCode(),
-                ResponseMessages.EARNING_CALL_GET_BY_MEMBER_SUCCESS.getMessage(),
-                responseDtos));
+            return ResponseEntity.ok(Response.success(
+                    ResponseMessages.EARNING_CALL_GET_BY_MEMBER_SUCCESS.getCode(),
+                    ResponseMessages.EARNING_CALL_GET_BY_MEMBER_SUCCESS.getMessage(),
+                    responseDtos));
+        } catch (Exception e) {
+            log.error("Error retrieving upcoming earning calls for memberId: {}", accessor.memberId(), e);
+            return ResponseEntity.badRequest()
+                    .body(Response.failure(
+                            ResponseMessages.EARNING_CALL_GET_FAIL.getCode(),
+                            ResponseMessages.EARNING_CALL_GET_FAIL.getMessage() + ": "
+                                    + e.getMessage()));
+        }
     }
 }
