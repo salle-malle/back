@@ -1,4 +1,4 @@
 coolSMS:
-  apiKey: ${API_KEY}
-  secretKey : ${SECRET_KEY}
-  from: ${FROM}
+  apiKey: ${COOL_SMS_API_KEY}
+  secretKey : ${COOL_SMS_SECRET_KEY}
+  from: ${COOL_SMS_FROM}
