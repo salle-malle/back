@@ -30,21 +30,26 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
+
   profiles:
     include:
       - jwt
       - coolSMS
       - openai
+
   batch:
-    job:
-      enabled: false
     jdbc:
-      initialize-schema: never
+      initialize-schema: always # 또는 필요 시 'embedded'
+    job:
+      enabled: true
+    job-repository:
+      incrementer-class: org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 fastapi:
   base-url: http://localhost:8000
 
