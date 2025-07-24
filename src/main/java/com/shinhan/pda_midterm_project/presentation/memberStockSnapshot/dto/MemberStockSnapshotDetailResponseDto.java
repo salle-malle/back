@@ -23,9 +23,10 @@ public class MemberStockSnapshotDetailResponseDto {
     private final String newsContent;
 //    private final String newsTitle;
     private final String newsImage;
+    private final Boolean isScrap;
 //    private final LocalDateTime newsPublishedAt;
 
-    public MemberStockSnapshotDetailResponseDto(MemberStockSnapshot snapshot) {
+    public MemberStockSnapshotDetailResponseDto(MemberStockSnapshot snapshot, Boolean isScrap) {
         this.snapshotId = snapshot.getId();
         this.snapshotCreatedAt = snapshot.getCreatedAt();
 
@@ -48,8 +49,7 @@ public class MemberStockSnapshotDetailResponseDto {
 
         this.newsContent = summary.getNewsContent();
         this.newsImage = summary.getNewsImage();
-//        this.newsTitle = summary.getNewsContent();
-//        this.newsSourceUrl = summary.get();
-//        this.newsPublishedAt = news.getNewsDate();
+        //5. snapshot이 scrap 에 올라가 있는지 확인.
+        this.isScrap = isScrap;
     }
 }

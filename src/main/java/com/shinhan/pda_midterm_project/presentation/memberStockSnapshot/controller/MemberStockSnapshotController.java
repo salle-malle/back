@@ -47,8 +47,6 @@ public class MemberStockSnapshotController {
         return ResponseEntity.ok().body(Response.success(GET_CARD_DETAIL_SUCCESS.getCode(), GET_CARD_DETAIL_SUCCESS.getMessage(), snapshotDetail));
     }
 
-    // MemberStockSnapshotController.java
-
     @GetMapping("/by-date")
     @MemberOnly
     public ResponseEntity<Response<List<MemberStockSnapshotDetailResponseDto>>> getSnapshotsByDate(
@@ -58,5 +56,16 @@ public class MemberStockSnapshotController {
         java.sql.Date sqlDate = java.sql.Date.valueOf(date);
         List<MemberStockSnapshotDetailResponseDto> snapshots = memberStockSnapshotService.getSnapshotsByDate(accessor.memberId(), sqlDate);
         return ResponseEntity.ok().body(Response.success("GET_CARD_BY_DATE", "해당 날짜의 카드 목록 조회 성공", snapshots));
+    }
+
+    //종목별 스크랩 조회
+    @GetMapping("/scraps")
+    @MemberOnly
+    public ResponseEntity<Response<List<MemberStockSnapshotDetailResponseDto>>> getScrappedSnapshotsByStock(
+            @Auth Accessor accessor,
+            @RequestParam("stockCode") String stockCode
+    ) {
+        List<MemberStockSnapshotDetailResponseDto> snapshots = memberStockSnapshotService.getScrappedSnapshotsByStock(accessor.memberId(), stockCode);
+        return ResponseEntity.ok().body(Response.success("GET_SCRAPPED_CARD_BY_STOCK", "종목별 스크랩 조회", snapshots));
     }
 }
