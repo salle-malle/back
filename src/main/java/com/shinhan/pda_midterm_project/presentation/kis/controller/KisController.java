@@ -69,7 +69,6 @@ public class KisController {
 	public ResponseEntity<Response<KisStockDetailResponse>> getStockDetail(
 			@Auth Accessor accessor,
 			@RequestBody KisStockDetailRequest request) {
-		Long memberId = accessor.memberId();
 		try {
 			Member member = memberService.findById(accessor.memberId());
 			String accessToken = member.getKisAccessToken();
@@ -109,7 +108,6 @@ public class KisController {
 
 				// KIS API 응답에서 종목명이 빈 값이면 DB에서 조회한 값으로 대체
 				if (response != null && response.getOutput() != null) {
-					String kisEtypNm = response.getOutput().getEtypNm();
 					response.getOutput().setEtypNm(stock.getStockName());
 				}
 
@@ -345,7 +343,6 @@ public class KisController {
 	@GetMapping("/unified-stocks")
 	@MemberOnly
 	public ResponseEntity<Response<UnifiedStockResponse>> getUnifiedStocks(@Auth Accessor accessor) {
-		Long memberId = accessor.memberId();
 		try {
 			Member member = memberService.findById(accessor.memberId());
 			String accessToken = member.getKisAccessToken();
