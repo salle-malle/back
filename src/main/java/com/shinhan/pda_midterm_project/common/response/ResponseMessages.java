@@ -72,6 +72,7 @@ public enum ResponseMessages {
     GET_MY_CURRENT_DISCLOSURE_SUCCESS("DISCLOSURE-001", "나의 최근 공시정보를 성공적으로 조회했습니다."),
     GET_DISCLOSURE_DETAIL_FAIL("DISCLOSURE-002", "공시 정보 세부사항을 가져오는 것을 실패했습니다."),
     GET_DISCLOSURE_DETAIL_SUCCESS("DISCLOSURE-003", "공시 정보 세부사항을 가져오는 것을 성공했습니다."),
+    GET_DISCLOSURES_SUCCESS("DISCLOSURE-004", "나의 전체 공시 정보를 가져오는 것을 성공했습니다."),
 
     /**
      * common

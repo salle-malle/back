@@ -1,10 +1,12 @@
 package com.shinhan.pda_midterm_project.domain.disclosure.service;
 
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.common.util.TimeUtil;
 import com.shinhan.pda_midterm_project.domain.disclosure.dto.DisclosureSimpleDto;
 import com.shinhan.pda_midterm_project.domain.disclosure.exception.DisclosureException;
 import com.shinhan.pda_midterm_project.domain.disclosure.model.Disclosure;
 import com.shinhan.pda_midterm_project.domain.disclosure.repository.DisclosureRepository;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +46,21 @@ public class DisclosureServiceImpl implements DisclosureService {
                 disclosure.getStock().getStockName(),
                 disclosure.getStock().getStockId()
         );
+    }
+
+    @Override
+    public List<DisclosureSimpleDto> getMyDisclosures(Long memberId) {
+        List<Disclosure> myCurrentDisclosureBetweenDates = disclosureRepository.getMyCurrentDisclosures(memberId);
+
+        return myCurrentDisclosureBetweenDates.stream()
+                .map((disclosure) -> DisclosureSimpleDto.of(
+                        disclosure.getId(),
+                        disclosure.getDisclosureTitle(),
+                        disclosure.getDisclosureSummary(),
+                        disclosure.getDisclosureDate(),
+                        disclosure.getStock().getStockName(),
+                        disclosure.getStock().getStockId()
+                )).toList();
     }
 
     public Disclosure findDisclosureById(Long disclosureId) {

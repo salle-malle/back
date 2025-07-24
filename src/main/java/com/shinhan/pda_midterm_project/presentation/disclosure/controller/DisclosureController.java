@@ -5,7 +5,9 @@ import com.shinhan.pda_midterm_project.common.annotation.MemberOnly;
 import com.shinhan.pda_midterm_project.common.config.DisclosureInitBatch;
 import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
+import com.shinhan.pda_midterm_project.common.util.TimeUtil;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
+import com.shinhan.pda_midterm_project.domain.disclosure.DisclosureProcessor;
 import com.shinhan.pda_midterm_project.domain.disclosure.dto.DisclosureSimpleDto;
 import com.shinhan.pda_midterm_project.domain.disclosure.service.DisclosureService;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,8 +55,10 @@ public class DisclosureController {
 
     @GetMapping("/{disclosureId}")
     @MemberOnly
-    public ResponseEntity<Response<DisclosureSimpleDto>> getDisclosureDetail(@PathVariable Long disclosureId,
-                                                                             @Auth Accessor accessor) {
+    public ResponseEntity<Response<DisclosureSimpleDto>> getDisclosureDetail(
+            @PathVariable Long disclosureId,
+            @Auth Accessor accessor
+    ) {
         DisclosureSimpleDto monoDisclosure = disclosureService.getMonoDisclosure(disclosureId);
         return ResponseEntity
                 .ok()
@@ -61,6 +66,23 @@ public class DisclosureController {
                         ResponseMessages.GET_DISCLOSURE_DETAIL_SUCCESS.getCode(),
                         ResponseMessages.GET_DISCLOSURE_DETAIL_SUCCESS.getMessage(),
                         monoDisclosure
+                ));
+    }
+
+    @GetMapping("/my-disclosures")
+    @MemberOnly
+    public ResponseEntity<Response<List<DisclosureSimpleDto>>> getMyDisclosures(
+            @Auth Accessor accessor
+    ) {
+        Long memberId = accessor.memberId();
+        List<DisclosureSimpleDto> disclosures = disclosureService.getMyDisclosures(memberId);
+
+        return ResponseEntity
+                .ok()
+                .body(Response.success(
+                        ResponseMessages.GET_DISCLOSURES_SUCCESS.getCode(),
+                        ResponseMessages.GET_DISCLOSURES_SUCCESS.getMessage(),
+                        disclosures
                 ));
     }
 }

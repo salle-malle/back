@@ -1,6 +1,7 @@
 package com.shinhan.pda_midterm_project.domain.disclosure.repository;
 
 import com.shinhan.pda_midterm_project.domain.disclosure.model.Disclosure;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,17 @@ public interface DisclosureRepository extends JpaRepository<Disclosure, Long> {
                 ORDER BY d.disclosureDate DESC
             """)
     List<Disclosure> getMyCurrentDisclosure(@Param("memberId") Long memberId, Pageable pageable);
+
+    @Query("""
+                SELECT d
+                FROM Disclosure d
+                JOIN d.stock s
+                WHERE s.stockId IN (
+                    SELECT ms.stock.stockId
+                    FROM MemberStock ms
+                    WHERE ms.member.id = :memberId
+                )
+                ORDER BY d.disclosureDate DESC
+            """)
+    List<Disclosure> getMyCurrentDisclosures(@Param("memberId") Long memberId);
 }
