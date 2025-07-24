@@ -25,4 +25,5 @@ public interface MemberStockRepository extends JpaRepository<MemberStock, Long> 
   @Query("SELECT ms.member FROM MemberStock ms WHERE ms.stock.stockId = :stockId")
   List<Member> findAllByStockId(@Param("stockId") String stockId);
 
+    List<MemberStock> findByStock(Stock stock);
 }
