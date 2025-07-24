@@ -23,7 +23,7 @@ public class TokenCookieManager {
         return ResponseCookie.from(TOKEN_NAME, tokenValue)
                 .maxAge(COOKIE_MAX_AGE)
                 .secure(false)
-                .httpOnly(false)
+                .httpOnly(true)
                 .sameSite("none")
                 .path("/")
                 .build();
