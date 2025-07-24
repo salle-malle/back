@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface DisclosureService {
     List<DisclosureSimpleDto> getMyCurrentDisclosure(Long memberId);
+
+    DisclosureSimpleDto getMonoDisclosure(Long disclosureId);
 }
