@@ -9,10 +9,13 @@ import com.shinhan.pda_midterm_project.domain.scrap.model.Scrap;
 import com.shinhan.pda_midterm_project.domain.scrap.repository.ScrapRepository;
 import com.shinhan.pda_midterm_project.domain.scrap_grouped.repository.ScrapGroupedRepository;
 import com.shinhan.pda_midterm_project.presentation.scrap.dto.ScrapResponseDto;
+import com.shinhan.pda_midterm_project.presentation.scrap.dto.ScrapStatusResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +56,32 @@ public class ScrapServiceImpl implements ScrapService {
 
         // 2. 원본 스크랩을 삭제합니다.
         scrapRepository.delete(scrapToDelete);
+    }
+
+    @Transactional(readOnly = true) // '읽기 전용' 조회이므로 readOnly = true를 붙이는 것이 좋습니다.
+    @Override
+    public ScrapStatusResponse getScrapStatus(Long memberId, Long snapshotId) {
+        // [수정] Scrap의 PK(Id)가 아닌, 연관된 MemberStockSnapshot의 ID로 조회해야 합니다.
+        Optional<Scrap> scrapOptional = scrapRepository.findByMemberIdAndMemberStockSnapshotId(memberId, snapshotId);
+
+        if (scrapOptional.isPresent()) {
+            // 스크랩이 존재하면 true와 실제 scrap.id를 반환
+            return new ScrapStatusResponse(true, scrapOptional.get().getId());
+        } else {
+            // 스크랩이 없으면 false와 null을 반환
+            return new ScrapStatusResponse(false, null);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void deleteScrapBySnapshotId(Long memberId, Long snapshotId) {
+        Scrap scrapToDelete = scrapRepository.findByMemberIdAndMemberStockSnapshotId(memberId, snapshotId)
+                .orElse(null);
+
+        if (scrapToDelete != null) {
+            scrapGroupedRepository.deleteAllByScrap(scrapToDelete);
+            scrapRepository.delete(scrapToDelete);
+        }
     }
 }

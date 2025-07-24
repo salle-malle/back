@@ -33,7 +33,7 @@ public class TokenCookieManager {
         return ResponseCookie.from(TOKEN_NAME, "")
                 .path("/")
                 .maxAge(0)
-                .secure(false)
+                .secure(true)
                 .httpOnly(true)
                 .sameSite("none")
                 .build();

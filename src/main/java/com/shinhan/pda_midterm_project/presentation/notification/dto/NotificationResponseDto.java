@@ -10,5 +10,6 @@ public record NotificationResponseDto(
         String title,
         String message,
         Boolean read,
-        LocalDateTime time
+        LocalDateTime time,
+        String type
 ) {}

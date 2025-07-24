@@ -93,6 +93,7 @@ public class NotificationService {
                         .message(n.getNotificationContent())
                         .read(n.getNotificationIsRead())
                         .time(n.getCreatedAt())
+                        .type(n.getNotificationType().name())
                         .build())
                 .toList();
     }

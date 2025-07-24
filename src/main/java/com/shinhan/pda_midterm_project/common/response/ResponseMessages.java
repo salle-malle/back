@@ -46,6 +46,7 @@ public enum ResponseMessages {
     CREATE_SCRAP_SUCCESS("SCRAP-001", "스크랩 추가 성공"),
     DELETE_SCRAP_SUCCESS("SCRAP-002", "스크랩 삭제 성공"),
     GET_SCRAP_GROUP_STATUS_SUCCESS("GROUP-004", "스크랩 여부 확인 성공"),
+    GET_SCRAP_STATUS_SUCCESS("SCRAP-003", "스크랩 상태 확인 성공"),
 
     /**
      * earning call

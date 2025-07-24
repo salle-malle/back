@@ -1,12 +1,10 @@
 package com.shinhan.pda_midterm_project.domain.disclosure.service;
 
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
-import com.shinhan.pda_midterm_project.common.util.TimeUtil;
 import com.shinhan.pda_midterm_project.domain.disclosure.dto.DisclosureSimpleDto;
 import com.shinhan.pda_midterm_project.domain.disclosure.exception.DisclosureException;
 import com.shinhan.pda_midterm_project.domain.disclosure.model.Disclosure;
 import com.shinhan.pda_midterm_project.domain.disclosure.repository.DisclosureRepository;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +48,7 @@ public class DisclosureServiceImpl implements DisclosureService {
 
     @Override
     public List<DisclosureSimpleDto> getMyDisclosures(Long memberId) {
-        List<Disclosure> myCurrentDisclosureBetweenDates = disclosureRepository.getMyCurrentDisclosures(memberId);
+        List<Disclosure> myCurrentDisclosureBetweenDates = disclosureRepository.getMyDisclosures(memberId);
 
         return myCurrentDisclosureBetweenDates.stream()
                 .map((disclosure) -> DisclosureSimpleDto.of(
