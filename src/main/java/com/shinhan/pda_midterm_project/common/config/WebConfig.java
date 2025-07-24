@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
         // CORS 정책 설정 (도메인과 credentials을 허용)
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000") // 클라이언트의 origin
+                .allowedOrigins("http://43.200.100.172:3000") // 서버의 origin
                 .allowCredentials(true) // credentials(쿠키 등)을 허용
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
