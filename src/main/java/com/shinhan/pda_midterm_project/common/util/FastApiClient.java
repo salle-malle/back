@@ -12,7 +12,7 @@ public class FastApiClient {
 
     private final WebClient fastApiWebClient;
 
-    public DisclosureResponseDto requestTodayDisclosure(DisclosureRequestDto requestDto) {
+    public DisclosureResponseDto requestDisclosure(DisclosureRequestDto requestDto) {
         return fastApiWebClient.post()
                 .uri("/analyze-8k")
                 .bodyValue(requestDto)
