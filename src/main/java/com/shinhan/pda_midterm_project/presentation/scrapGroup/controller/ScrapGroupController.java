@@ -86,7 +86,7 @@ public class ScrapGroupController {
                 ));
     }
 
-    @GetMapping("/status/{scrapId}")//OK
+    @GetMapping("/status/{scrapId}")//OK 해당 스크랩이 유저폴더의 어디에 있는지.
     @MemberOnly
     public ResponseEntity<Response<List<GroupInclusionStatusDto>>> getGroupStatusForScrap(
             @Auth Accessor accessor,

@@ -11,4 +11,5 @@ public interface MemberStockSnapshotService {
     Page<MemberStockSnapshotDetailResponseDto> getSnapshotList(Long memberId, Pageable pageable);
     // MemberStockSnapshotService.java
     List<MemberStockSnapshotDetailResponseDto> getSnapshotsByDate(Long memberId, java.sql.Date date);
+    List<MemberStockSnapshotDetailResponseDto> getScrappedSnapshotsByStock(Long memberId, String stockCode);
 }
