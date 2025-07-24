@@ -19,7 +19,8 @@ public class NotificationScheduler {
 
 
 //    @Scheduled(cron = "0 */1 * * * ?")
-    @Scheduled(cron = "0 0 8 * * ?")
+//    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void sendMorningNotifications() {
         log.info("아침 8시! 접속 중인 유저에게 알림 발송 시작");
 

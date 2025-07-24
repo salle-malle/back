@@ -28,7 +28,7 @@ public class DisclosureAlarmScheduler {
 
 //    @Scheduled(cron = "0 40 7 * * *")
     @Transactional
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 40 7 * * *")
     public void sendDisclosureNotifications() {
         LocalDate today = LocalDate.now();
         List<Disclosure> todayDisclosures = disclosureRepository.findByDisclosureDate(today);
