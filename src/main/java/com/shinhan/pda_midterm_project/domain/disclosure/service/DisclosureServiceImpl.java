@@ -27,6 +27,7 @@ public class DisclosureServiceImpl implements DisclosureService {
                         disclosure.getDisclosureTitle(),
                         disclosure.getDisclosureSummary(),
                         disclosure.getDisclosureDate(),
+                        disclosure.getStock().getStockName(),
                         disclosure.getStock().getStockId()))
                 .toList();
     }
@@ -40,6 +41,7 @@ public class DisclosureServiceImpl implements DisclosureService {
                 disclosure.getDisclosureTitle(),
                 disclosure.getDisclosureSummary(),
                 disclosure.getDisclosureDate(),
+                disclosure.getStock().getStockName(),
                 disclosure.getStock().getStockId()
         );
     }

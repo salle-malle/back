@@ -7,13 +7,15 @@ public record DisclosureSimpleDto(
         String disclosureTitle,
         String disclosureSummary,
         LocalDate disclosureDate,
+        String stockName,
         String stockId) {
     public static DisclosureSimpleDto of(
             Long id,
             String disclosureTitle,
             String disclosureSummary,
             LocalDate disclosureDate,
+            String stockName,
             String stockId) {
-        return new DisclosureSimpleDto(id, disclosureTitle, disclosureSummary, disclosureDate, stockId);
+        return new DisclosureSimpleDto(id, disclosureTitle, disclosureSummary, disclosureDate, stockName, stockId);
     }
 }
