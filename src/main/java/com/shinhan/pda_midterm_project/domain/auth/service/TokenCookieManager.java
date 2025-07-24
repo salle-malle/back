@@ -22,8 +22,8 @@ public class TokenCookieManager {
     public static ResponseCookie createCookie(String tokenValue) {
         return ResponseCookie.from(TOKEN_NAME, tokenValue)
                 .maxAge(COOKIE_MAX_AGE)
-                .secure(true)
-                .httpOnly(true)
+                .secure(false)
+                .httpOnly(false)
                 .sameSite("none")
                 .path("/")
                 .build();
