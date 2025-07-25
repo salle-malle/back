@@ -37,4 +37,6 @@ public interface DisclosureRepository extends JpaRepository<Disclosure, Long> {
                 ORDER BY d.disclosureDate DESC
             """)
     List<Disclosure> getMyDisclosures(@Param("memberId") Long memberId);
+
+    List<Disclosure> findByDisclosureDate(LocalDate today);
 }
