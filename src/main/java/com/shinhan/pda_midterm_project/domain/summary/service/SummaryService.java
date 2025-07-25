@@ -58,7 +58,7 @@ public class SummaryService {
 
     @Transactional
     protected Summary summarizeAndSave(String content, Stock stock, String imageUrl) {
-        String summaryText = summarize(content);
+        String summaryText = summarize(content, stock.getStockName());
 
         // 1. Summary 저장
         Summary summary = summaryRepository.save(
@@ -115,11 +115,12 @@ public class SummaryService {
      * @param content
      * @return
      */
-    private String summarize(String content) {
+    private String summarize(String content, String stockName) {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model(ChatModel.GPT_3_5_TURBO)
                 .addUserMessage(
                         "⚠️ 너는 이제부터 전문 투자 뉴스 요약가야. 아래 영어 기사들을 읽고 **반드시 '한국어'로** 요약해야 해.\n\n"
+                                + "이번 뉴스는 `" + stockName + "` 기업에 대한 내용이야. 이 기업과 관련된 흐름에 초점을 맞춰서 요약해.\n\n"
                                 + "요약은 **마크다운 형식**으로 다음 기준을 따라:\n"
                                 + "1. 소제목은 `###`로 시작하고, 핵심 주제를 중심으로 작성해.\n"
                                 + "2. 각 소제목 아래에 1~3줄로 문단을 구성하고, 불필요한 결론이나 서론은 생략해.\n"
@@ -179,7 +180,7 @@ public class SummaryService {
                 "뉴스 요약:" + summaryContent;
     }
 
-
+    @Transactional
     public void generateSummaryForTodayNews() {
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
         LocalDateTime endOfDay = startOfDay.plusDays(1);
