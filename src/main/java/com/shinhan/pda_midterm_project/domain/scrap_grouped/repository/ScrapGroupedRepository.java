@@ -38,4 +38,15 @@ public interface ScrapGroupedRepository extends JpaRepository<ScrapGrouped, Long
 
     @Query("SELECT sgd.scrapGroup.id FROM ScrapGrouped sgd WHERE sgd.scrap.id = :scrapId")
     Set<Long> findGroupIdsByScrapId(@Param("scrapId") Long scrapId);
+    @Query("SELECT sg FROM ScrapGrouped sg " +
+            "JOIN FETCH sg.scrap s " +
+            "JOIN FETCH sg.scrapGroup " +
+            "JOIN FETCH s.memberStockSnapshot mss " +
+            "JOIN FETCH mss.investmentTypeNewsComment itnc " +
+            "JOIN FETCH itnc.summary sum " +
+            "JOIN FETCH sum.stock st " +
+            "WHERE sg.scrapGroup.id = :scrapGroupId AND sg.scrapGroup.member.id = :memberId " +
+            "ORDER BY sg.createdAt DESC")
+    List<ScrapGrouped> findScrapsInGroupWithDetails(@Param("memberId") Long memberId, @Param("scrapGroupId") Long scrapGroupId);
+
 }

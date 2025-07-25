@@ -6,6 +6,7 @@ import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.scrap_grouped.service.ScrapGroupedService;
 import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedDeleteRequestDto;
+import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedDetailResponseDto;
 import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedPushRequestDto;
 import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class ScrapGroupedController {
     private final ScrapGroupedService scrapGroupedService;
 
     // 특정 그룹에 포함된 스크랩 목록 조회
-    @GetMapping("/{scrapGroupId}")//OK
+    @GetMapping("/{scrapgroupid}")//OK
     @MemberOnly
     public ResponseEntity<Response<List<ScrapGroupedResponseDto>>> getScrapsInGroup(@Auth Accessor accessor,
                                                                                     @PathVariable Long scrapGroupId) {
@@ -53,5 +54,18 @@ public class ScrapGroupedController {
         scrapGroupedService.removeScrapFromGroup(memberId, requestDto.getScrapGroupedId());
         return ResponseEntity
                 .ok().body(Response.success(DELETE_SCRAP_GROUPED_SUCCESS.getCode(), DELETE_SCRAP_GROUPED_SUCCESS.getMessage()));
+    }
+
+    @GetMapping("/detail/{scrapGroupId}")
+    @MemberOnly
+    public ResponseEntity<Response<List<ScrapGroupedDetailResponseDto>>> getScrapsDetailInGroup(
+            @Auth Accessor accessor,
+            @PathVariable Long scrapGroupId) {
+
+        Long memberId = accessor.memberId();
+        // 서비스의 반환 타입이 변경되었으므로 변수 타입도 함께 수정합니다.
+        List<ScrapGroupedDetailResponseDto> scrapedItems = scrapGroupedService.getScrapsDetailInGroup(memberId, scrapGroupId);
+
+        return ResponseEntity.ok().body(Response.success(GET_SCRAP_GROUPED_SUCCESS.getCode(), GET_SCRAP_GROUPED_SUCCESS.getMessage(), scrapedItems));
     }
 }
