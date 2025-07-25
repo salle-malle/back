@@ -11,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,6 +60,34 @@ public Page<MemberStockSnapshotDetailResponseDto> getSnapshotList(Long memberId,
         return new MemberStockSnapshotDetailResponseDto(snapshot, isScrap);
     });
 }
+    public List<MemberStockSnapshotDetailResponseDto> getSnapshotsForLastWeek(Long memberId) {
+        // 1. 조회 기간을 설정합니다. (오늘 포함 7일)
+        LocalDate today = LocalDate.now();
+        LocalDate sevenDaysAgo = today.minusDays(6);
+
+        // LocalDate를 java.sql.Date 객체로 변환합니다.
+        Date startDate = Date.valueOf(sevenDaysAgo);
+        Date endDate = Date.valueOf(today);
+
+        // 2. 리포지토리에서 기간 내의 스냅샷 목록을 가져옵니다.
+        List<MemberStockSnapshot> snapshots = memberStockSnapshotRepository.findCardsByMemberIdAndCreatedAtBetween(memberId, startDate, endDate);
+
+        // 3. 스냅샷 ID 목록을 추출합니다.
+        List<Long> snapshotIds = snapshots.stream()
+                .map(MemberStockSnapshot::getId)
+                .collect(Collectors.toList());
+
+        // 4. 스크랩된 ID Set을 조회합니다.
+        Set<Long> scrappedSnapshotIds = scrapRepository.findScrappedSnapshotIdsByMemberIdAndSnapshotIds(memberId, snapshotIds);
+
+        // 5. 스냅샷을 DTO로 변환하며 스크랩 여부를 설정합니다.
+        return snapshots.stream()
+                .map(snapshot -> {
+                    boolean isScrap = scrappedSnapshotIds.contains(snapshot.getId());
+                    return new MemberStockSnapshotDetailResponseDto(snapshot, isScrap);
+                })
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<MemberStockSnapshotDetailResponseDto> getSnapshotsByDate(Long memberId, java.sql.Date date) {
