@@ -25,5 +25,18 @@ public interface DisclosureRepository extends JpaRepository<Disclosure, Long> {
             """)
     List<Disclosure> getMyCurrentDisclosure(@Param("memberId") Long memberId, Pageable pageable);
 
+    @Query("""
+                SELECT d
+                FROM Disclosure d
+                JOIN d.stock s
+                WHERE s.stockId IN (
+                    SELECT ms.stock.stockId
+                    FROM MemberStock ms
+                    WHERE ms.member.id = :memberId
+                )
+                ORDER BY d.disclosureDate DESC
+            """)
+    List<Disclosure> getMyDisclosures(@Param("memberId") Long memberId);
+
     List<Disclosure> findByDisclosureDate(LocalDate today);
 }

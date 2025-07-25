@@ -46,6 +46,21 @@ public class DisclosureServiceImpl implements DisclosureService {
         );
     }
 
+    @Override
+    public List<DisclosureSimpleDto> getMyDisclosures(Long memberId) {
+        List<Disclosure> myCurrentDisclosureBetweenDates = disclosureRepository.getMyDisclosures(memberId);
+
+        return myCurrentDisclosureBetweenDates.stream()
+                .map((disclosure) -> DisclosureSimpleDto.of(
+                        disclosure.getId(),
+                        disclosure.getDisclosureTitle(),
+                        disclosure.getDisclosureSummary(),
+                        disclosure.getDisclosureDate(),
+                        disclosure.getStock().getStockName(),
+                        disclosure.getStock().getStockId()
+                )).toList();
+    }
+
     public Disclosure findDisclosureById(Long disclosureId) {
         return disclosureRepository.findById(disclosureId).orElseThrow(() ->
                 new DisclosureException(ResponseMessages.GET_DISCLOSURE_DETAIL_FAIL)

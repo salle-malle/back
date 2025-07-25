@@ -17,4 +17,3 @@ public class AuthException extends RuntimeException {
         return responseMessage.getCode();
     }
 }
-
