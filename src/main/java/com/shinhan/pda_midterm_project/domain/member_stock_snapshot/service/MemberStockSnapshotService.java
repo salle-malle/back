@@ -9,7 +9,7 @@ import java.util.List;
 public interface MemberStockSnapshotService {
     MemberStockSnapshotDetailResponseDto getSnapshotDetail(Long memberId, Long snapshotId);
     Page<MemberStockSnapshotDetailResponseDto> getSnapshotList(Long memberId, Pageable pageable);
-    // MemberStockSnapshotService.java
+    public List<MemberStockSnapshotDetailResponseDto> getSnapshotsForLastWeek(Long memberId);
     List<MemberStockSnapshotDetailResponseDto> getSnapshotsByDate(Long memberId, java.sql.Date date);
     List<MemberStockSnapshotDetailResponseDto> getScrappedSnapshotsByStock(Long memberId, String stockCode);
 }

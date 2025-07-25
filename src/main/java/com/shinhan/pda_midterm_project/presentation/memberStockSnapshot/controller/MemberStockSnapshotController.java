@@ -26,7 +26,7 @@ public class MemberStockSnapshotController {
     private final MemberStockSnapshotService memberStockSnapshotService;
 
     // 스냅샷 목록 조회 (페이지네이션)
-    @GetMapping("")
+    @GetMapping("/get-10-cards")
     @MemberOnly
     public ResponseEntity<Response<Page<MemberStockSnapshotDetailResponseDto>>> getSnapshotList(
             @Auth Accessor accessor,
@@ -34,6 +34,17 @@ public class MemberStockSnapshotController {
 
         Page<MemberStockSnapshotDetailResponseDto> snapshotPage = memberStockSnapshotService.getSnapshotList(accessor.memberId(), pageable);
         return ResponseEntity.ok().body(Response.success(GET_CARD_LIST_SUCCESS.getCode(), GET_CARD_LIST_SUCCESS.getMessage(),  snapshotPage));
+    }
+
+    @GetMapping("")
+    @MemberOnly
+    public ResponseEntity<Response<List<MemberStockSnapshotDetailResponseDto>>> getSnapshotListForLastWeek(
+            @Auth Accessor accessor) {
+
+        List<MemberStockSnapshotDetailResponseDto> snapshots = memberStockSnapshotService.getSnapshotsForLastWeek(accessor.memberId());
+
+        // 성공 응답의 제네릭 타입을 List로 변경합니다.
+        return ResponseEntity.ok().body(Response.success(GET_CARD_LIST_SUCCESS.getCode(), GET_CARD_LIST_SUCCESS.getMessage(), snapshots));
     }
 
     // 스냅샷 상세 정보 조회
