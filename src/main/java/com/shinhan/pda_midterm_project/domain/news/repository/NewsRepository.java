@@ -12,4 +12,11 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     // 종목코드로 뉴스 조회 (최신순으로 정렬)
     List<News> findByStock_StockIdOrderByCreatedAtDesc(String stockId);
+
+    List<News> findByStock_StockIdAndCreatedAtBetweenOrderByCreatedAtDesc(
+            String stockId,
+            LocalDateTime start,
+            LocalDateTime end
+    );
+
 }

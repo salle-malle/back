@@ -6,7 +6,9 @@ import com.shinhan.pda_midterm_project.domain.news.model.News;
 import com.shinhan.pda_midterm_project.presentation.news.dto.StockNewsResponseDto;
 import com.shinhan.pda_midterm_project.domain.notification.model.Notification;
 import com.shinhan.pda_midterm_project.domain.notification.repository.NotificationRepository;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,7 +33,12 @@ public class NewsService {
      * @return 뉴스 목록
      */
     public List<StockNewsResponseDto> getNewsByStockId(String stockId) {
-        List<News> newsList = newsRepository.findByStock_StockIdOrderByCreatedAtDesc(stockId);
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        List<News> newsList = newsRepository
+                .findByStock_StockIdAndCreatedAtBetweenOrderByCreatedAtDesc(stockId, startOfDay, endOfDay);
 
         return newsList.stream()
                 .map(news -> StockNewsResponseDto.builder()
@@ -45,4 +52,5 @@ public class NewsService {
                         .build())
                 .collect(Collectors.toList());
     }
+
 }
