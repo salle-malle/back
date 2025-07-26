@@ -31,7 +31,7 @@ public class AuthenticationResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-
+        System.out.println(request.getCookies());
         if (request == null) {
             throw new AuthException(ResponseMessages.AUTH_BAD_REQUEST);
         }

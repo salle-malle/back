@@ -17,6 +17,8 @@ public class NotificationScheduler {
     private final JobLauncher jobLauncher;
     private final Job notificationSendJob;
 
+
+//    @Scheduled(cron = "0 */1 * * * ?")
 //    @Scheduled(cron = "0 0 8 * * ?")
 //    @Scheduled(cron = "0 */1 * * * ?")
     public void sendMorningNotifications() {

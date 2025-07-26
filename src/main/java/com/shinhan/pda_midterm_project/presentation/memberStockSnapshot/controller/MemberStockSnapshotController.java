@@ -26,7 +26,7 @@ public class MemberStockSnapshotController {
     private final MemberStockSnapshotService memberStockSnapshotService;
 
     // 스냅샷 목록 조회 (페이지네이션)
-    @GetMapping("")
+    @GetMapping("/get-10-cards")
     @MemberOnly
     public ResponseEntity<Response<Page<MemberStockSnapshotDetailResponseDto>>> getSnapshotList(
             @Auth Accessor accessor,
@@ -34,6 +34,17 @@ public class MemberStockSnapshotController {
 
         Page<MemberStockSnapshotDetailResponseDto> snapshotPage = memberStockSnapshotService.getSnapshotList(accessor.memberId(), pageable);
         return ResponseEntity.ok().body(Response.success(GET_CARD_LIST_SUCCESS.getCode(), GET_CARD_LIST_SUCCESS.getMessage(),  snapshotPage));
+    }
+
+    @GetMapping("")
+    @MemberOnly
+    public ResponseEntity<Response<List<MemberStockSnapshotDetailResponseDto>>> getSnapshotListForLastWeek(
+            @Auth Accessor accessor) {
+
+        List<MemberStockSnapshotDetailResponseDto> snapshots = memberStockSnapshotService.getSnapshotsForLastWeek(accessor.memberId());
+
+        // 성공 응답의 제네릭 타입을 List로 변경합니다.
+        return ResponseEntity.ok().body(Response.success(GET_CARD_LIST_SUCCESS.getCode(), GET_CARD_LIST_SUCCESS.getMessage(), snapshots));
     }
 
     // 스냅샷 상세 정보 조회
@@ -47,8 +58,6 @@ public class MemberStockSnapshotController {
         return ResponseEntity.ok().body(Response.success(GET_CARD_DETAIL_SUCCESS.getCode(), GET_CARD_DETAIL_SUCCESS.getMessage(), snapshotDetail));
     }
 
-    // MemberStockSnapshotController.java
-
     @GetMapping("/by-date")
     @MemberOnly
     public ResponseEntity<Response<List<MemberStockSnapshotDetailResponseDto>>> getSnapshotsByDate(
@@ -58,5 +67,16 @@ public class MemberStockSnapshotController {
         java.sql.Date sqlDate = java.sql.Date.valueOf(date);
         List<MemberStockSnapshotDetailResponseDto> snapshots = memberStockSnapshotService.getSnapshotsByDate(accessor.memberId(), sqlDate);
         return ResponseEntity.ok().body(Response.success("GET_CARD_BY_DATE", "해당 날짜의 카드 목록 조회 성공", snapshots));
+    }
+
+    //종목별 스크랩 조회
+    @GetMapping("/scraps")
+    @MemberOnly
+    public ResponseEntity<Response<List<MemberStockSnapshotDetailResponseDto>>> getScrappedSnapshotsByStock(
+            @Auth Accessor accessor,
+            @RequestParam("stockCode") String stockCode
+    ) {
+        List<MemberStockSnapshotDetailResponseDto> snapshots = memberStockSnapshotService.getScrappedSnapshotsByStock(accessor.memberId(), stockCode);
+        return ResponseEntity.ok().body(Response.success("GET_SCRAPPED_CARD_BY_STOCK", "종목별 스크랩 조회", snapshots));
     }
 }

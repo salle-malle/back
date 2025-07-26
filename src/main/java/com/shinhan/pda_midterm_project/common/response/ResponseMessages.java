@@ -46,6 +46,7 @@ public enum ResponseMessages {
     CREATE_SCRAP_SUCCESS("SCRAP-001", "스크랩 추가 성공"),
     DELETE_SCRAP_SUCCESS("SCRAP-002", "스크랩 삭제 성공"),
     GET_SCRAP_GROUP_STATUS_SUCCESS("GROUP-004", "스크랩 여부 확인 성공"),
+    GET_SCRAP_STATUS_SUCCESS("SCRAP-003", "스크랩 상태 확인 성공"),
 
     /**
      * earning call
@@ -72,6 +73,7 @@ public enum ResponseMessages {
     GET_MY_CURRENT_DISCLOSURE_SUCCESS("DISCLOSURE-001", "나의 최근 공시정보를 성공적으로 조회했습니다."),
     GET_DISCLOSURE_DETAIL_FAIL("DISCLOSURE-002", "공시 정보 세부사항을 가져오는 것을 실패했습니다."),
     GET_DISCLOSURE_DETAIL_SUCCESS("DISCLOSURE-003", "공시 정보 세부사항을 가져오는 것을 성공했습니다."),
+    GET_DISCLOSURES_SUCCESS("DISCLOSURE-004", "나의 전체 공시 정보를 가져오는 것을 성공했습니다."),
 
     /**
      * common

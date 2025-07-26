@@ -8,12 +8,15 @@ import com.shinhan.pda_midterm_project.common.response.Response;
 import com.shinhan.pda_midterm_project.common.response.ResponseMessages;
 import com.shinhan.pda_midterm_project.domain.auth.model.Accessor;
 import com.shinhan.pda_midterm_project.domain.auth.service.SmsCertificationService;
+import com.shinhan.pda_midterm_project.domain.member.model.Member;
 import com.shinhan.pda_midterm_project.domain.member.service.MemberService;
 import com.shinhan.pda_midterm_project.presentation.auth.dto.request.AuthRequest;
 import com.shinhan.pda_midterm_project.presentation.member.dto.request.MemberDto;
+import com.shinhan.pda_midterm_project.presentation.member.dto.response.MemberResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +30,24 @@ public class MemberController {
 
     private final MemberService memberService;
     private final SmsCertificationService smsCertificationService;
+
+    @MemberOnly
+    @GetMapping("/info")
+    public ResponseEntity<Response<MemberResponse>> memberInfo(
+            @Auth Accessor accessor
+    ) {
+        Long memberId = accessor.memberId();
+        Member member = memberService.findById(memberId);
+        MemberResponse memberInfo = MemberResponse.of(member.getMemberName(), member.getMemberNickname());
+
+        return ResponseEntity
+                .ok()
+                .body(Response.success(
+                        ResponseMessages.SUCCESS.getCode(),
+                        ResponseMessages.SUCCESS.getMessage(),
+                        memberInfo
+                ));
+    }
 
     @MemberOnly
     @PatchMapping("/phone")

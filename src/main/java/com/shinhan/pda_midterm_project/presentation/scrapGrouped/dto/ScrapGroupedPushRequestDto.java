@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ScrapGroupedPushRequestDto {
     private Long scrapGroupId;
-    private Long scrapId; // memberStockSnapshotId -> scrapId 로 변경
+    private Long scrapId;
 }

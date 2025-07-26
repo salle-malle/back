@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-    private static final String DATA_SERVER_BASE_URL = "http://localhost:8000";
+    private static final String DATA_SERVER_BASE_URL = "http://fastapi:8000";
 
     @Bean
     public WebClient webClient() {
