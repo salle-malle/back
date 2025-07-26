@@ -7,6 +7,7 @@ import com.shinhan.pda_midterm_project.domain.scrap_group.model.ScrapGroup;
 import com.shinhan.pda_midterm_project.domain.scrap_group.repository.ScrapGroupRepository;
 import com.shinhan.pda_midterm_project.domain.scrap_grouped.model.ScrapGrouped;
 import com.shinhan.pda_midterm_project.domain.scrap_grouped.repository.ScrapGroupedRepository;
+import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedDetailResponseDto;
 import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedPushRequestDto;
 import com.shinhan.pda_midterm_project.presentation.scrapGrouped.dto.ScrapGroupedResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +31,17 @@ public class ScrapGroupedServiceImpl implements ScrapGroupedService {
         List<ScrapGrouped> scrapings = scrapGroupedRepository.findScrapsInGroup(memberId, scrapGroupId);
         return scrapings.stream()
                 .map(ScrapGroupedResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScrapGroupedDetailResponseDto> getScrapsDetailInGroup(Long memberId, Long scrapGroupId) {
+        // 1. JOIN FETCH가 적용된 쿼리를 호출하여 성능을 최적화합니다.
+        List<ScrapGrouped> scrapings = scrapGroupedRepository.findScrapsInGroupWithDetails(memberId, scrapGroupId);
+
+        // 2. 새로운 상세 DTO로 변환하여 반환합니다.
+        return scrapings.stream()
+                .map(ScrapGroupedDetailResponseDto::new)
                 .collect(Collectors.toList());
     }
 
