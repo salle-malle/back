@@ -14,7 +14,9 @@ import com.shinhan.pda_midterm_project.domain.notification.model.NotificationTyp
 import com.shinhan.pda_midterm_project.domain.notification.repository.NotificationRepository;
 import com.shinhan.pda_midterm_project.domain.total_summary.model.TotalSummary;
 import com.shinhan.pda_midterm_project.domain.total_summary.repository.TotalSummaryRepository;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ public class TotalSummaryService {
     private final MemberStockSnapshotRepository snapshotRepository;
     private final TotalSummaryRepository totalSummaryRepository;
     private final NotificationRepository notificationRepository;
+    private final Clock clock;
 
     private OpenAIClient client;
 
@@ -61,7 +64,9 @@ public class TotalSummaryService {
                     .filter(snapshot -> snapshot.getCreatedAt().toLocalDate().isEqual(today))
                     .toList();
 
-            if (todaySnapshots.isEmpty()) continue;
+            if (todaySnapshots.isEmpty()) {
+                continue;
+            }
 
             String merged = todaySnapshots.stream()
                     .map(s -> s.getInvestmentTypeNewsComment().getInvestmentTypeNewsContent())
@@ -81,7 +86,6 @@ public class TotalSummaryService {
             int stockCount = todaySnapshots.size();
             String title = String.format("%s 총평 요약 도착!", formattedDate);
             String content = String.format("%d개 종목에 대한 총평 요약이 도착했어요. 확인해보세요!", stockCount);
-
 
             Notification notification = Notification.builder()
                     .member(member)
@@ -107,5 +111,10 @@ public class TotalSummaryService {
         ChatCompletion completion = getClient().chat().completions().create(params);
 
         return completion.choices().get(0).message().content().orElse("").trim();
+    }
+
+    public String getTodaySummary(Long memberId) {
+        LocalDateTime localDateTime = LocalDateTime.now(clock);
+        return totalSummaryRepository.getTodayTotalSummary(localDateTime, memberId);
     }
 }
