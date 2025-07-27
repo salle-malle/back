@@ -57,7 +57,6 @@ public class ScrapGroupServiceImpl implements ScrapGroupService {
         return new ScrapGroupResponseDto(scrapGroup); // @Transactional에 의해 변경 감지되어 자동 저장됨
     }
 
-    // --- [ ⚠️ 여기가 수정된 부분입니다 ] ---
     @Override
     @Transactional
     public ScrapGroupResponseDto deleteScrapGroup(Long memberId, Long scrapGroupId) {
