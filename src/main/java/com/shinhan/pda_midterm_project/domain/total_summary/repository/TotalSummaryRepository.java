@@ -10,8 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TotalSummaryRepository extends JpaRepository<TotalSummary, Long> {
 
-    @Query("SELECT y.totalContent FROM TotalSummary y WHERE y.member.id = :memberId AND DATE(y.createdAt) = DATE(:localDateTime)")
-    String getTodayTotalSummary(@Param("localDateTime") LocalDateTime localDateTime,
-                                @Param("memberId") Long memberId);
+    @Query("SELECT t.totalContent FROM TotalSummary t WHERE t.member.id = :memberId AND t.createdAt BETWEEN :start AND :end")
+    String getTodayTotalSummary(@Param("memberId") Long memberId,
+                                @Param("start") LocalDateTime start,
+                                @Param("end") LocalDateTime end);
+
 
 }

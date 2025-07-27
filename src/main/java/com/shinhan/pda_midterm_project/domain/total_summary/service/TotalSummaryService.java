@@ -14,7 +14,6 @@ import com.shinhan.pda_midterm_project.domain.notification.model.NotificationTyp
 import com.shinhan.pda_midterm_project.domain.notification.repository.NotificationRepository;
 import com.shinhan.pda_midterm_project.domain.total_summary.model.TotalSummary;
 import com.shinhan.pda_midterm_project.domain.total_summary.repository.TotalSummaryRepository;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Clock;
 
 @Slf4j
 @Service
@@ -64,9 +64,7 @@ public class TotalSummaryService {
                     .filter(snapshot -> snapshot.getCreatedAt().toLocalDate().isEqual(today))
                     .toList();
 
-            if (todaySnapshots.isEmpty()) {
-                continue;
-            }
+            if (todaySnapshots.isEmpty()) continue;
 
             String merged = todaySnapshots.stream()
                     .map(s -> s.getInvestmentTypeNewsComment().getInvestmentTypeNewsContent())
@@ -87,6 +85,7 @@ public class TotalSummaryService {
             String title = String.format("%s 총평 요약 도착!", formattedDate);
             String content = String.format("%d개 종목에 대한 총평 요약이 도착했어요. 확인해보세요!", stockCount);
 
+
             Notification notification = Notification.builder()
                     .member(member)
                     .notificationTitle(title)
@@ -103,7 +102,27 @@ public class TotalSummaryService {
     private String summarizeTotal(String content) {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model(ChatModel.GPT_3_5_TURBO)
-                .addUserMessage("다음은 오늘 투자 요약 내용 모음이야. 핵심을 한 문단으로 종합해서 한국어로 서술형 요약해줘.\n\n" + content)
+                .addUserMessage("""
+                    다음은 오늘의 투자 뉴스 요약 모음입니다. 이 내용을 바탕으로 3~5개의 핵심 요약을 만들어 주세요.
+                    
+                    각 요약은 다음과 같은 형식으로 구성해 주세요:
+                    
+                    [이모지] 제목
+                    한 줄설명 
+                    
+                    예시:
+                    📉 기술주 약세
+                    금리 인상 우려로 기술주 중심의 하락세가 나타났습니다.
+                                        
+                    📈 반도체 강세
+                    AI 수요 확대에 따라 엔비디아 등 반도체 종목이 상승했습니다.
+                                        
+                    💡 투자 코멘트
+                    단기적인 시장 변동성에 대비해 포트폴리오 리밸런싱이 필요합니다.
+                    
+                    상승, 하락, 전반적인 투자 코멘트, 투자 조언 으로 구성해주세요. 이모지는 적절히 📉📈💡🔥 같은 걸 활용해 주셔도 좋습니다.
+                    각 문단별로 \n\n로 구분해주세요.
+                    """.trim() + "\n\n" + content)
                 .maxCompletionTokens(500)
                 .temperature(0.5)
                 .build();
@@ -114,7 +133,10 @@ public class TotalSummaryService {
     }
 
     public String getTodaySummary(Long memberId) {
-        LocalDateTime localDateTime = LocalDateTime.now(clock);
-        return totalSummaryRepository.getTodayTotalSummary(localDateTime, memberId);
+        LocalDate today = LocalDate.now(clock);
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay().minusNanos(1);
+
+        return totalSummaryRepository.getTodayTotalSummary(memberId, startOfDay, endOfDay);
     }
 }

@@ -58,7 +58,7 @@ public class ScrapGroupController {
     public ResponseEntity<Response<ScrapGroupResponseDto>> updateScrapGroupName(@Auth Accessor accessor,
             @RequestBody ScrapGroupNameRequestDto requestDto)
      {
-        ScrapGroupResponseDto scrapGroups = scrapGroupService.updateScrapGroup(requestDto.getScrapGroupId(), requestDto.getScrapGroupId(),requestDto.getScrapGroupName());
+        ScrapGroupResponseDto scrapGroups = scrapGroupService.updateScrapGroup(accessor.memberId(), requestDto.getScrapGroupId(),requestDto.getScrapGroupName());
 
         return ResponseEntity
                 .ok()
