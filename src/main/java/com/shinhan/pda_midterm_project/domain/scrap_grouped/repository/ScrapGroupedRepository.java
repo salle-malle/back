@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -33,8 +34,13 @@ public interface ScrapGroupedRepository extends JpaRepository<ScrapGrouped, Long
     void deleteAllByScrapGroupId(Long scrapGroupId);
 
     @Modifying
-    @Query("DELETE FROM ScrapGrouped sgd WHERE sgd.scrapGroup.id = :scrapGroupId")
+    @Query(
+            value = "DELETE FROM scrap_grouped WHERE scrap_group_id = :scrapGroupId",
+            nativeQuery = true
+    )
     void bulkDeleteByScrapGroupId(@Param("scrapGroupId") Long scrapGroupId);
+
+
 
     @Query("SELECT sgd.scrapGroup.id FROM ScrapGrouped sgd WHERE sgd.scrap.id = :scrapId")
     Set<Long> findGroupIdsByScrapId(@Param("scrapId") Long scrapId);
