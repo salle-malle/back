@@ -114,7 +114,11 @@ public class TotalSummaryService {
     }
 
     public String getTodaySummary(Long memberId) {
-        LocalDateTime localDateTime = LocalDateTime.now(clock);
-        return totalSummaryRepository.getTodayTotalSummary(localDateTime, memberId);
+        LocalDate today = LocalDate.now(clock);
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay().minusNanos(1);
+
+        return totalSummaryRepository.getTodayTotalSummary(memberId, startOfDay, endOfDay);
     }
+
 }
