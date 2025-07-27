@@ -26,7 +26,6 @@ public class DisclosureAlarmScheduler {
     private final MemberStockRepository memberStockRepository;
     private final NotificationRepository notificationRepository;
 
-//    @Scheduled(cron = "0 40 7 * * *")
     @Transactional
     @Scheduled(cron = "0 40 7 * * *")
     public void sendDisclosureNotifications() {
