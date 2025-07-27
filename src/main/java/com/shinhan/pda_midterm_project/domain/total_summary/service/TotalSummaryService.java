@@ -15,6 +15,7 @@ import com.shinhan.pda_midterm_project.domain.notification.repository.Notificati
 import com.shinhan.pda_midterm_project.domain.total_summary.model.TotalSummary;
 import com.shinhan.pda_midterm_project.domain.total_summary.repository.TotalSummaryRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Clock;
 
 @Slf4j
 @Service
@@ -36,6 +38,7 @@ public class TotalSummaryService {
     private final MemberStockSnapshotRepository snapshotRepository;
     private final TotalSummaryRepository totalSummaryRepository;
     private final NotificationRepository notificationRepository;
+    private final Clock clock;
 
     private OpenAIClient client;
 
